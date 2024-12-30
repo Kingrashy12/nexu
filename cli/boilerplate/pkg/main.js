@@ -9,14 +9,14 @@ export const getPkg = (appName) => {
  "start": "npx nodemon server.js"
  },
  "keywords": [],
- "author": "",
+ "author": "", 
  "license": "ISC",
  "dependencies": {
   "body-parser": "^1.20.2",
   "cors": "^2.8.5",
   "dotenv": "^16.4.5",
   "express": "^4.21.1",
-  "nexujs: "^0.1.1",
+  "nexujs": "^0.1.1"
  },
  "devDependencies": {
   "nodemon": "^3.1.9"
@@ -42,7 +42,7 @@ export const getPkg = (appName) => {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
-    "nexujs: "^0.1.1",
+    "nexujs": "^0.1.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.9",
