@@ -13,8 +13,8 @@ class CreateApp {
   async #askProjectName() {
     const project_name = await text({
       message: "What is your project name?",
-      placeholder: "turbo-app",
-      defaultValue: "turbo-app",
+      placeholder: "nexu-app",
+      defaultValue: "nexu-app",
     });
     this.projectName = project_name;
   }

@@ -1,25 +1,25 @@
 {
-  "name": "turbo-express-cli",
+  "name": "nexujs-cli",
   "version": "0.1.0",
   "main": "index.js",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Kingrashy12/turbo-express.git"
+    "url": "https://github.com/Kingrashy12/nexu.git"
   },
-  "homepage": "https://github.com/Kingrashy12/turbo-express/tree/main/cli#readme",
+  "homepage": "https://github.com/Kingrashy12/nexu/tree/main/cli#readme",
   "bugs": {
-    "url": "https://github.com/Kingrashy12/turbo-express/issues"
+    "url": "https://github.com/Kingrashy12/nexu/issues"
   },
   "bin": {
-    "turbo-express-cli": "./index.js",
+    "nexujs-cli": "./index.js",
     "update-deps": "node ./src/lib/update-pkg.js"
   },
   "scripts": {},
   "keywords": [],
   "author": "Rapheal Chizitere",
   "license": "MIT",
-  "description": "A CLI tool for scaffolding and managing Turbo-Express projects.",
+  "description": "A CLI tool for scaffolding and managing NexuJs projects.",
   "dependencies": {
     "@clack/prompts": "^0.9.0",
     "chalk": "^5.4.1",

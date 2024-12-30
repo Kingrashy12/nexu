@@ -1,15 +1,15 @@
 {
-  "name": "turbo-express",
+  "name": "nexujs",
   "version": "0.1.0",
   "main": "dist/index.js",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Kingrashy12/turbo-express.git"
+    "url": "https://github.com/Kingrashy12/nexu.git"
   },
-  "homepage": "https://github.com/Kingrashy12/turbo-express/tree/main/package#readme",
+  "homepage": "https://github.com/Kingrashy12/nexu/tree/main/package#readme",
   "bugs": {
-    "url": "https://github.com/Kingrashy12/turbo-express/issues"
+    "url": "https://github.com/Kingrashy12/nexu/issues"
   },
   "scripts": {
     "build": "rollup -c"

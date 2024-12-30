@@ -1,5 +1,4 @@
 export const getPkgWithDB = (appName) => {
-  // TODO: Add turbo-express
   const mongoMain = `{
     "name": "${appName}",
     "version": "1.0.0",
@@ -17,7 +16,8 @@ export const getPkgWithDB = (appName) => {
       "cors": "^2.8.5",
       "dotenv": "^16.4.5",
       "express": "^4.21.1",
-      "mongoose": "^8.8.1"
+      "mongoose": "^8.8.1",
+      "nexujs: "^0.1.1",
     },
     "devDependencies": {
       "nodemon": "^3.1.9"
@@ -43,7 +43,8 @@ export const getPkgWithDB = (appName) => {
       "cors": "^2.8.5",
       "dotenv": "^16.4.5",
       "express": "^4.21.1",
-      "mongoose": "^8.8.1"
+      "mongoose": "^8.8.1",
+      "nexujs: "^0.1.1",
     },
     "devDependencies": {
       "nodemon": "^3.1.9",
@@ -72,6 +73,7 @@ export const getPkgWithDB = (appName) => {
       "cors": "^2.8.5",
       "dotenv": "^16.4.5",
       "express": "^4.21.1",
+      "nexujs: "^0.1.1",
       "pg": "^8.13.1"
     },
     "devDependencies": {
@@ -98,7 +100,7 @@ export const getPkgWithDB = (appName) => {
       "cors": "^2.8.5",
       "dotenv": "^16.4.5",
       "express": "^4.21.1",
-      "mongoose": "^8.8.1",
+      "nexujs: "^0.1.1",
       "pg": "^8.13.1"
     },
     "devDependencies": {

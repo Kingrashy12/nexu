@@ -1,7 +1,8 @@
 import express, { NextFunction, Request, Response, Router } from "express";
-import routes from "./routes.js";
+import routes from "./routes";
 import { pathToFileURL } from "url";
 import dotenv from "dotenv";
+import { logger } from "./logger";
 
 dotenv.config();
 
@@ -10,9 +11,9 @@ class App {
   app: any;
   router: Router;
   constructor() {
-    this.app = express(); // Main app instance
-    this.router = express.Router(); // Router instance
-    this.registerRoutes(); // Initial registration of routes
+    this.app = express();
+    this.router = express.Router();
+    this.registerRoutes();
     this.start();
   }
 
@@ -46,6 +47,7 @@ class App {
             const module = await import(routeURL);
             module.default(req, res, next);
           } catch (error) {
+            logger.error(error);
             next(error);
           }
         }
@@ -53,7 +55,7 @@ class App {
     });
   }
 
-  start() {
+  private start() {
     const PORT = process.env.PORT || 5000;
     this.app.listen(PORT, () => {
       console.log(`Server running on port http://localhost:${PORT}`);
@@ -63,7 +65,7 @@ class App {
 
 const appInstance = new App();
 const app = appInstance.init();
-const appRouter = appInstance.getRouter();
+const nexuRouter = appInstance.getRouter();
 
 export default app;
-export { appRouter, appInstance as turbo };
+export { nexuRouter, appInstance as nexu };

@@ -1,22 +1,22 @@
-# Turbo-Express
+# Nexu
 
-Turbo-Express is a lightweight backend library built on Express.js, designed for modern web applications with file-based routing. It is complemented by the **Turbo-Express CLI**, which simplifies project scaffolding and dependency management.
+Nexu is a lightweight backend library built on Express.js, designed for modern web applications with file-based routing. It is complemented by the **NexuJs CLI**, which simplifies project scaffolding and dependency management.
 
 ---
 
 ## Repositories
 
-- **[Turbo-Express](./package/README.md)**: Learn more about the core library and its features.
-- **[Turbo-Express CLI](./cli/README.md)**: Explore the CLI tool for creating and managing Turbo-Express projects.
+- **[Nexu](./package/README.md)**: Learn more about the core library and its features.
+- **[NexuJs CLI](./cli/README.md)**: Explore the CLI tool for creating and managing NexuJs projects.
 
 ---
 
 ## Getting Started
 
-To create a new Turbo-Express project, run:
+To create a new NexuJs project, run:
 
 ```bash
-npx turbo-express-cli create
+npx nexujs-cli create
 ```
 
 ## License

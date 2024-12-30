@@ -1,6 +1,6 @@
 export const mainFile = `import cors from 'cors';
 import bodyParser from 'body-parser';
-import { turbo, app } from "turbo-express";
+import { app } from "nexujs";
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -54,12 +54,12 @@ export const tsconfigFile = `{
 }`;
 
 export const helloRoute = `// All routes should be structured as follows
-import { appRouter } from "turbo-express";
+import { nexuRouter } from "nexujs";
 
-const router = appRouter;
+const router = nexuRouter;
 
 router.get("/", (req, res) => {
-  res.send("Hi 👋, Welcome to the Turbo Express API.");
+  res.send("Hi 👋, Welcome to the Nexu Express API.");
 });
 
 export default router;`;

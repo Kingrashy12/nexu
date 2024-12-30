@@ -1,4 +1,4 @@
-# **Turbo-Express CLI**
+# **NexuJs CLI**
 
 ## Table of Contents
 
@@ -9,13 +9,13 @@
   - [`update-deps`](#update-deps)
 - [License](#license)
 
-The **Turbo-Express CLI** is a command-line tool designed to help you quickly scaffold new Turbo-Express projects, and manage dependencies for Turbo-Express-based applications.
+The **NexuJs CLI** is a command-line tool designed to help you quickly scaffold new NexuJs projects, and manage dependencies for NexuJs-based applications.
 
 ---
 
 ## Features
 
-- **Project Scaffolding**: Easily create a new Turbo-Express project with a single command.
+- **Project Scaffolding**: Easily create a new NexuJs project with a single command.
 - **Update Dependencies**: Keep your scaffolded projects up-to-date with the latest versions of all dependencies.
 - **Fast Setup**: Quickly set up your project environment and get started with development.
 
@@ -23,34 +23,34 @@ The **Turbo-Express CLI** is a command-line tool designed to help you quickly sc
 
 ## Installation
 
-To use the **Turbo-Express CLI**, install it globally via npm:
+To use the **NexuJs CLI**, install it globally via npm:
 
 ```bash
-npm install -g turbo-express-cli
+npm install -g nexujs-cli
 ```
 
 Alternatively, you can use the CLI without installing it globally by running the `npx` command:
 
 ```bash
-npx turbo-express-cli <command>
+npx nexujs-cli <command>
 ```
 
 ## CLI Command
 
 ### `init`
 
-Scaffold a new Turbo-Express project.
+Scaffold a new NexuJs project.
 
 ```bash
-npx turbo-express-cli init
+npx nexujs-cli init
 ```
 
 ### `update-deps`
 
-Update all dependencies in your scaffolded Turbo-Express project to their latest versions.
+Update all dependencies in your scaffolded NexuJs project to their latest versions.
 
 ```bash
-npx turbo-express-cli update-deps
+npx nexujs-cli update-deps
 ```
 
 ## License

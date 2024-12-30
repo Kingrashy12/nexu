@@ -1,4 +1,4 @@
-# **Turbo-Express**
+# **Nexu**
 
 ## Table of Contents
 
@@ -9,7 +9,7 @@
 - [Configuration](#configuration)
 - [License](#license)
 
-**Turbo-Express** is a lightweight and scalable backend library built on top of Express.js, featuring file-based routing and addon support for seamless development of modern web applications.
+**Nexu** is a lightweight and scalable backend library built on top of Express.js, featuring file-based routing and addon support for seamless development of modern web applications.
 
 ---
 
@@ -23,17 +23,17 @@
 
 ## Getting Started
 
-To create a new **Turbo-Express** project, all you need to do is run:
+To create a new **Nexu** project, all you need to do is run:
 
 ```bash
-npx turbo-express-cli create
+npx nexujs-cli create
 ```
 
 On initialization, you'll see the following prompts:
 
 ```bash
 What is your project name?
-│  turbo-app
+│  nexu-app
 Would you like to use Typescript?
 │  ● Yes (Recommended)
 │  ○ No
@@ -43,11 +43,11 @@ Which database would you like to use?
 │  ○ Others
 ```
 
-After the prompts, `turbo-express-cli` will create a new Turbo-Express project and install the required dependencies.
+After the prompts, `nexujs-cli` will create a new Nexu project and install the required dependencies.
 
 ## File-Based Routing
 
-**Turbo-Express** automatically registers routes based on your file structure. To add a new route, simply create a JavaScript or TypeScript file inside the routes directory, and Turbo-Express will automatically register it.
+**Nexu** automatically registers routes based on your file structure. To add a new route, simply create a JavaScript or TypeScript file inside the routes directory, and Nexu will automatically register it.
 
 For example:
 
@@ -57,21 +57,21 @@ For example:
 ### File structure
 
 ```js
-import { appRouter } from "turbo-express";
+import { nexuRouter } from "nexujs";
 import { loginController } from "./controllers/auth.js";
 
-const router = appRouter;
+const router = nexuRouter;
 
 router.post("/login", loginController);
 
 export default router;
 ```
 
-Turbo-Express will automatically map this to `localhost:5000/auth`
+Nexu will automatically map this to `localhost:5000/auth`
 
 ## Configuration
 
-You can customize various aspects of **Turbo-Express** to fit your needs. Here are a few key areas:
+You can customize various aspects of **Nexu** to fit your needs. Here are a few key areas:
 
 - **Addon support**: You can add custom routing paths through the `addon()` method.
 
@@ -79,9 +79,9 @@ Example:
 
 ```js
 // server.js
-import { app, turbo } from "turbo-express";
+import { app, nexu } from "nexujs";
 
-turbo.addon("api");
+nexu.addon("api");
 ```
 
 This will modify the route paths to prefix them with `/api`, which will make this `localhost:5000/api/auth/login`

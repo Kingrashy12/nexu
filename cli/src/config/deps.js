@@ -30,8 +30,8 @@ const installPkg = async (appName) => {
   try {
     const updateCommand =
       appName !== "/"
-        ? `cd ${path.resolve(appName)} && npx create-turbo-express update-deps` // Run the update-deps command in the app directory
-        : "npx create-turbo-express update-deps"; // Run the update-deps command in the current directory
+        ? `cd ${path.resolve(appName)} && npx nexujs-cli update-deps` // Run the update-deps command in the app directory
+        : "npx nexujs-cli update-deps"; // Run the update-deps command in the current directory
 
     // Run the update-deps CLI command
     execSync(updateCommand, { stdio: "inherit" });
