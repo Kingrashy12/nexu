@@ -3,6 +3,14 @@
   "version": "0.1.0",
   "main": "index.js",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kingrashy12/turbo-express.git"
+  },
+  "homepage": "https://github.com/Kingrashy12/turbo-express/tree/main/cli#readme",
+  "bugs": {
+    "url": "https://github.com/Kingrashy12/turbo-express/issues"
+  },
   "bin": {
     "turbo-express-cli": "./index.js",
     "update-deps": "node ./src/lib/update-pkg.js"
