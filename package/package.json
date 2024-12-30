@@ -1,0 +1,39 @@
+{
+  "name": "turbo-express",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "files": [
+    "dist",
+    "dist/types"
+  ],
+  "keywords": [],
+  "author": "Rapheal Chizitere",
+  "license": "MIT",
+  "description": "A lightweight Express.js library with file-based routing for modern backend development.",
+  "devDependencies": {
+    "@rollup/plugin-alias": "^5.1.1",
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/express": "^5.0.0",
+    "rollup": "^4.29.1",
+    "rollup-plugin-delete": "^2.1.0",
+    "rollup-plugin-esbuild": "^6.1.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-visualizer": "^5.13.1",
+    "tslib": "^2.8.1",
+    "typescript": "^5.7.2"
+  },
+  "peerDependencies": {
+    "express": "^4.21.2"
+  },
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "dotenv": "^16.4.7"
+  }
+}

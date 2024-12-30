@@ -1,0 +1,6 @@
+/server
+/test
+/cli/node_modules
+/package/node_modules
+/package/stats.html
+/package/dist
