@@ -16,7 +16,17 @@
     "update-deps": "node ./src/lib/update-pkg.js"
   },
   "scripts": {},
-  "keywords": [],
+  "keywords": [
+    "cli",
+    "scaffold",
+    "create",
+    "project generator",
+    "nodejs",
+    "cli tool",
+    "nexu",
+    "expressjs",
+    "backend cli"
+  ],
   "author": "Rapheal Chizitere",
   "license": "MIT",
   "description": "A CLI tool for scaffolding and managing NexuJs projects.",

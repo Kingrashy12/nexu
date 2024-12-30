@@ -18,7 +18,19 @@
     "dist",
     "dist/types"
   ],
-  "keywords": [],
+  "keywords": [
+    "express",
+    "backend",
+    "file-based routing",
+    "nodejs",
+    "routing",
+    "api",
+    "middleware",
+    "node",
+    "server",
+    "expressjs",
+    "nexu"
+  ],
   "author": "Rapheal Chizitere",
   "license": "MIT",
   "description": "A lightweight Express.js library with file-based routing for modern backend development.",
