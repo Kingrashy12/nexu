@@ -67,5 +67,4 @@ const appInstance = new App();
 const app = appInstance.init();
 const nexuRouter = appInstance.getRouter();
 
-export default app;
-export { nexuRouter, appInstance as nexu };
+export { nexuRouter, appInstance as nexu, app };
