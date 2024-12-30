@@ -3,6 +3,14 @@
   "version": "0.1.0",
   "main": "dist/index.js",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kingrashy12/turbo-express.git"
+  },
+  "homepage": "https://github.com/Kingrashy12/turbo-express#readme",
+  "bugs": {
+    "url": "https://github.com/Kingrashy12/turbo-express/issues"
+  },
   "scripts": {
     "build": "rollup -c"
   },
