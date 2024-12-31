@@ -28,7 +28,7 @@ export const updateBatch = () => {
 
     // Install the latest version for each dependency
     allDeps.forEach((dep) => {
-      logger.message(`Updating ${dep} to latest in ${projectDir}...`);
+      logger.message(`Updating ${dep} to latest...`);
       execSync(`npm install ${dep}@latest`, {
         stdio: "inherit",
         cwd: projectDir,

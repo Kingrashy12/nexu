@@ -2,11 +2,13 @@ export const getPkg = (appName) => {
   const js = `{
  "name": "${appName}",
  "version": "1.0.0",
+ "description": "This project was bootstrapped with NexuJs-CLI.",
  "main": "server.js",
  "type": "module",
  "private": "true",
  "scripts": {
- "start": "npx nodemon server.js"
+  "start": "nexujs start",
+  "dev": "nexujs dev"
  },
  "keywords": [],
  "author": "", 
@@ -14,7 +16,6 @@ export const getPkg = (appName) => {
  "dependencies": {
   "body-parser": "^1.20.2",
   "cors": "^2.8.5",
-  "dotenv": "^16.4.5",
   "express": "^4.21.1",
   "nexujs": "^0.1.1"
  },
@@ -26,13 +27,15 @@ export const getPkg = (appName) => {
   const ts = `{
   "name": "${appName}",
   "version": "1.0.0",
+  "description": "This project was bootstrapped with NexuJs-CLI.",
   "main": "server.ts",
   "type": "module",
   "private": "true",
   "scripts": {
-    "build": "tsc",
-    "start": "npx nodemon server.ts",
-    "serve": "tsc && node dist/server.js"
+  "build": "tsc",
+  "start": "nexujs start",
+  "dev": "nexujs dev:ts",
+  "serve": "tsc && node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -40,7 +43,6 @@ export const getPkg = (appName) => {
   "dependencies": {
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "nexujs": "^0.1.1"
   },

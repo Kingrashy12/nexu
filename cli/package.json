@@ -1,6 +1,6 @@
 {
   "name": "nexujs-cli",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "main": "index.js",
   "type": "module",
   "repository": {
@@ -11,10 +11,7 @@
   "bugs": {
     "url": "https://github.com/Kingrashy12/nexu/issues"
   },
-  "bin": {
-    "nexujs-cli": "./index.js",
-    "update-deps": "node ./src/lib/update-pkg.js"
-  },
+  "bin": "./index.js",
   "scripts": {},
   "keywords": [
     "cli",

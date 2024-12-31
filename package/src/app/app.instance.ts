@@ -1,19 +1,19 @@
-import express, { NextFunction, Request, Response, Router } from "express";
+import express, { Application, Router } from "express";
 import routes from "./routes";
 import { pathToFileURL } from "url";
 import dotenv from "dotenv";
 import { logger } from "./logger";
-
-dotenv.config();
+import { NexuNext, NexuRequest, NexuResponse } from "@/types";
 
 class App {
   private addonValue = "";
-  app: any;
+  app: Application;
   router: Router;
   constructor() {
     this.app = express();
     this.router = express.Router();
     this.registerRoutes();
+    this.loadEnv();
     this.start();
   }
 
@@ -30,7 +30,7 @@ class App {
     this.registerRoutes();
   }
 
-  registerRoutes() {
+  private registerRoutes() {
     this.router.stack = [];
 
     const { routesName, routesPath } = routes;
@@ -42,7 +42,7 @@ class App {
       const path = addon ? `/${addon}/${routeName}` : `/${routeName}`;
       this.app.use(
         path,
-        async (req: Request, res: Response, next: NextFunction) => {
+        async (req: NexuRequest, res: NexuResponse, next: NexuNext) => {
           try {
             const module = await import(routeURL);
             module.default(req, res, next);
@@ -60,6 +60,10 @@ class App {
     this.app.listen(PORT, () => {
       console.log(`Server running on port http://localhost:${PORT}`);
     });
+  }
+
+  private loadEnv() {
+    return dotenv.config();
   }
 }
 

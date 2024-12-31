@@ -1,6 +1,6 @@
 {
   "name": "nexujs",
-  "version": "0.1.2",
+  "version": "0.1.5",
   "main": "dist/index.js",
   "type": "module",
   "repository": {
@@ -11,12 +11,19 @@
   "bugs": {
     "url": "https://github.com/Kingrashy12/nexu/issues"
   },
+  "bin": {
+    "nexujs": "./scripts/index.js"
+  },
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "start": "nodemon dist/server.js",
+    "dev": "nodemon server.js",
+    "dev-ts": "concurrently \"tsc --watch\" \"nodemon dist/server.js\""
   },
   "files": [
     "dist",
-    "dist/types"
+    "dist/types",
+    "scripts"
   ],
   "keywords": [
     "express",
@@ -50,6 +57,8 @@
   },
   "dependencies": {
     "chalk": "^5.4.1",
+    "commander": "^13.0.0",
+    "concurrently": "^9.1.2",
     "dotenv": "^16.4.7"
   }
 }

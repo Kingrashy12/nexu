@@ -24,5 +24,5 @@ export default {
     esbuild({ minify: true }),
     visualizer({ open: true }),
   ],
-  external: ["path", "fs", "chalk", "dotenv"],
+  external: ["path", "fs", "chalk", "dotenv", "commander", "concurrently"],
 };

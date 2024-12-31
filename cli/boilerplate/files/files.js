@@ -31,7 +31,9 @@ yarn-error.log*
 export const nodemonFile = `{
   "execMap": {
     "ts": "ts-node"
-  }
+  },
+  "watch": ["./**/*.ts"],
+  "ext": "ts"
 }`;
 
 export const tsconfigFile = `{
@@ -39,18 +41,17 @@ export const tsconfigFile = `{
     "module": "ESNext",
     "target": "ESNext",
     "moduleResolution": "node",
-    "declaration": true,
-    "declarationMap": true,
     "esModuleInterop": true,
     "strict": true,
     "noUnusedLocals": true,
     "noImplicitAny": true,
-    "noUnusedParameters": true,
+    "outDir": "./dist",
     "paths": {
       "@/*": ["./*"]
     }
- },
-  "include": ["./**/*.ts"]
+  },
+  "include": ["*.ts"],
+  "exclude": ["node_modules"]
 }`;
 
 export const helloRoute = `// All routes should be structured as follows

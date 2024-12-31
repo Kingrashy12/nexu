@@ -47,6 +47,16 @@ class CreateApp {
     await createDir(this.projectName, this.selectedDb);
   }
 
+  #success(name) {
+    console.log(`
+   ${chalk.whiteBright("Run the following")}
+   Commands:
+    ${chalk.greenBright(
+      name && `\cd ${this.projectName} && `
+    )}npm run dev   To start development server
+    `);
+  }
+
   async init() {
     await this.#askProjectName();
     if (isCancel(this.projectName)) {
@@ -69,6 +79,12 @@ class CreateApp {
     await this.#handleDir();
 
     await handleFiles(this.selectedLang, this.selectedDb, this.projectName);
+
+    logger.success(
+      chalk.green(`\Project "${this.projectName}" created successfully!`)
+    );
+    const name = this.projectName !== "./" ? this.projectName : "";
+    this.#success(name);
 
     if (!this.projectName || !this.selectedLang || !this.selectedDb) {
       log.warning("Missing required inputs. Please try again.");
