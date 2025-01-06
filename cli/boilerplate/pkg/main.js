@@ -15,7 +15,6 @@ export const getPkg = (appName) => {
  "license": "ISC",
  "dependencies": {
   "body-parser": "^1.20.2",
-  "cors": "^2.8.5",
   "express": "^4.21.1",
   "nexujs": "^0.1.1"
  },
@@ -42,7 +41,6 @@ export const getPkg = (appName) => {
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
     "express": "^4.21.1",
     "nexujs": "^0.1.1"
   },
@@ -50,7 +48,6 @@ export const getPkg = (appName) => {
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
-    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21"
   }
 }`;
