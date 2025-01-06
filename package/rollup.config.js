@@ -24,5 +24,14 @@ export default {
     esbuild({ minify: true }),
     visualizer({ open: true }),
   ],
-  external: ["path", "fs", "chalk", "dotenv", "commander", "concurrently"],
+  external: [
+    "path",
+    "fs",
+    "chalk",
+    "dotenv",
+    "commander",
+    "concurrently",
+    "cors",
+    "ncrypt-js",
+  ],
 };

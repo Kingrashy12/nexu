@@ -43,6 +43,7 @@
     "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.0",
     "@rollup/plugin-typescript": "^12.1.2",
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "rollup": "^4.29.1",
     "rollup-plugin-delete": "^2.1.0",
@@ -59,6 +60,8 @@
     "chalk": "^5.4.1",
     "commander": "^13.0.0",
     "concurrently": "^9.1.2",
-    "dotenv": "^16.4.7"
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "ncrypt-js": "^2.1.2"
   }
 }

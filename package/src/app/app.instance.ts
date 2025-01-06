@@ -4,14 +4,24 @@ import { pathToFileURL } from "url";
 import dotenv from "dotenv";
 import { logger } from "./logger";
 import { NexuNext, NexuRequest, NexuResponse } from "@/types";
+import NexuRouter from "./router";
+import { nexuKeys } from "./keys";
+import cors, { CorsOptions } from "cors";
+import ncrypt from "ncrypt-js";
 
 class App {
   private addonValue = "";
   app: Application;
   router: Router;
+  private cors_config = {};
+  private nexuRouter = new NexuRouter(nexuKeys.router).getRouter();
+  private encryptRes = false;
+  private ncrypt = new ncrypt(nexuKeys.router);
   constructor() {
     this.app = express();
-    this.router = express.Router();
+    // this.router = express.Router();
+    this.router = this.encryptRes ? this.nexuRouter : express.Router();
+    this.app.use(cors(this.cors_config));
     this.registerRoutes();
     this.loadEnv();
     this.start();
@@ -42,6 +52,8 @@ class App {
       const path = addon ? `/${addon}/${routeName}` : `/${routeName}`;
       this.app.use(
         path,
+        express.json(),
+        this.decryptMiddleware.bind(this),
         async (req: NexuRequest, res: NexuResponse, next: NexuNext) => {
           try {
             const module = await import(routeURL);
@@ -53,6 +65,8 @@ class App {
         }
       );
     });
+
+    this.app.use(this.router);
   }
 
   private start() {
@@ -64,6 +78,30 @@ class App {
 
   private loadEnv() {
     return dotenv.config();
+  }
+
+  corsConfig(arg: CorsOptions) {
+    this.cors_config = arg;
+    this.app.use(cors(this.cors_config));
+    this.registerRoutes();
+  }
+
+  secureRes() {
+    this.encryptRes = true;
+    this.router = this.nexuRouter;
+    this.registerRoutes();
+  }
+
+  decryptMiddleware(req: NexuRequest, res: NexuResponse, next: NexuNext) {
+    try {
+      if (req.body && req.body.encrypted) {
+        const decryptedBody = this.ncrypt.decrypt(req.body.encrypted);
+        req.body = JSON.parse(String(decryptedBody));
+      }
+      next();
+    } catch (error) {
+      res.status(400).send({ error: "Failed to decrypt request data" });
+    }
   }
 }
 
