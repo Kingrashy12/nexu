@@ -9,7 +9,7 @@ const program = new Command();
 program
   .name("nexujs-cli")
   .description("CLI for scaffolding and managing NexuJs apps")
-  .version("0.1.4");
+  .version("0.1.6");
 
 program
   .command("update-deps")

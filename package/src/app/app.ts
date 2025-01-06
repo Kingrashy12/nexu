@@ -24,6 +24,7 @@ class App {
     this.registerRoutes();
     this.app.use(cors({ ...this.cors_config }));
     this.app.use(express.json());
+    this.app.options("*", cors(this.cors_config));
     this.loadEnv();
     this.start();
   }
