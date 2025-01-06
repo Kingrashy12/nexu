@@ -1,8 +1,6 @@
-export const mainFile = `import cors from 'cors';
-import bodyParser from 'body-parser';
+export const mainFile = `import bodyParser from 'body-parser';
 import { app } from "nexujs";
 
-app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -50,7 +48,7 @@ export const tsconfigFile = `{
       "@/*": ["./*"]
     }
   },
-  "include": ["*.ts"],
+    "include": ["./**/*.ts"],
   "exclude": ["node_modules"]
 }`;
 

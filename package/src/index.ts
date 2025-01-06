@@ -1,2 +1,2 @@
-export * from "./app/app.instance";
+export * from "./app/app";
 export * from "./types/index";

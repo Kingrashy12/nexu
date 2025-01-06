@@ -11,7 +11,13 @@ class Route {
   }
 
   getRoute() {
-    const routesPath = path.join(process.cwd(), "/routes");
+    const distPath = path.join(process.cwd(), "/dist/routes");
+    const tsConfig = path.join(process.cwd(), "/tsconfig.json");
+    const isTs = existsSync(tsConfig);
+    if (isTs) {
+      logger.info("Typescript detected switching routes path");
+    }
+    const routesPath = isTs ? distPath : path.join(process.cwd(), "/routes");
     if (existsSync(routesPath)) {
       const fileArray = readdirSync(routesPath, "utf-8");
       for (let file of fileArray) {

@@ -3,7 +3,7 @@ import routes from "./routes";
 import { pathToFileURL } from "url";
 import dotenv from "dotenv";
 import { logger } from "./logger";
-import { NexuNext, NexuRequest, NexuResponse } from "@/types";
+import { NexuNext, NexuRequest, NexuResponse } from "../types";
 import NexuRouter from "./router";
 import { nexuKeys } from "./keys";
 import cors, { CorsOptions } from "cors";
@@ -13,16 +13,17 @@ class App {
   private addonValue = "";
   app: Application;
   router: Router;
-  private cors_config = {};
+  private cors_config: CorsOptions = {};
   private nexuRouter = new NexuRouter(nexuKeys.router).getRouter();
-  private encryptRes = false;
+  // private encryptRes = false;
   private ncrypt = new ncrypt(nexuKeys.router);
   constructor() {
     this.app = express();
-    // this.router = express.Router();
-    this.router = this.encryptRes ? this.nexuRouter : express.Router();
-    this.app.use(cors(this.cors_config));
+    this.router = this.nexuRouter;
+    // this.router = this.encryptRes ? this.nexuRouter : express.Router();
     this.registerRoutes();
+    this.app.use(cors({ ...this.cors_config }));
+    this.app.use(express.json());
     this.loadEnv();
     this.start();
   }
@@ -52,7 +53,6 @@ class App {
       const path = addon ? `/${addon}/${routeName}` : `/${routeName}`;
       this.app.use(
         path,
-        express.json(),
         this.decryptMiddleware.bind(this),
         async (req: NexuRequest, res: NexuResponse, next: NexuNext) => {
           try {
@@ -82,15 +82,15 @@ class App {
 
   corsConfig(arg: CorsOptions) {
     this.cors_config = arg;
-    this.app.use(cors(this.cors_config));
+    this.app.use(cors({ ...this.cors_config }));
     this.registerRoutes();
   }
 
-  secureRes() {
-    this.encryptRes = true;
-    this.router = this.nexuRouter;
-    this.registerRoutes();
-  }
+  // secureRes() {
+  //   this.encryptRes = true;
+  //   this.router = this.nexuRouter;
+  //   this.registerRoutes();
+  // }
 
   decryptMiddleware(req: NexuRequest, res: NexuResponse, next: NexuNext) {
     try {

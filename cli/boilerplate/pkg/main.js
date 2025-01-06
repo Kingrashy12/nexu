@@ -48,6 +48,7 @@ export const getPkg = (appName) => {
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21"
   }
 }`;

@@ -5,6 +5,7 @@
 /package/stats.html
 /package/dist
 /package/nexujs-*.tgz
+/package/t.js
 /node_modules
 .env
 .releaserc.json
