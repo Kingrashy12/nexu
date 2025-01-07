@@ -9,6 +9,7 @@ import { nexuKeys } from "./keys";
 import cors, { CorsOptions } from "cors";
 import { readConfig } from "@/utils/config";
 import CryptoJS from "crypto-js";
+import bodyParser from "body-parser";
 
 class App {
   private addonValue = "";
@@ -46,6 +47,8 @@ class App {
     this.router.stack = [];
     this.app.options("*", cors(this.cors_config));
     this.app.use(cors(this.cors_config));
+    this.app.use(bodyParser.json());
+    this.app.use(bodyParser.urlencoded({ extended: true }));
 
     const { routesName, routesPath } = routes;
     routesName.forEach((routeName, index) => {
