@@ -5,7 +5,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Kingrashy12/nexu.git"
+    "url": "git+https://github.com/Kingrashy12/nexu.git"
   },
   "homepage": "https://github.com/Kingrashy12/nexu/tree/main/package#readme",
   "bugs": {

@@ -4,6 +4,7 @@
 
 /package/client/node_modules
 /package/client/stats.html
+/package/client/nexujs-client-*.tgz
 /package/client/dist
 
 /package/server/node_modules

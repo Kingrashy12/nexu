@@ -1,0 +1,43 @@
+{
+  "name": "nexujs-client",
+  "version": "0.1.0",
+  "description": "Client handler for nexujs request decrypt",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kingrashy12/nexu.git"
+  },
+  "keywords": [
+    "nexu",
+    "client",
+    "handler"
+  ],
+  "author": "Rapheal Chizitere",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kingrashy12/nexu/issues"
+  },
+  "homepage": "https://github.com/Kingrashy12/nexu#readme",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "crypto-js": "^4.2.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@types/crypto-js": "^4.2.2",
+    "rollup": "^4.30.0",
+    "rollup-plugin-delete": "^2.1.0",
+    "rollup-plugin-esbuild": "^6.1.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-visualizer": "^5.14.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.7.2"
+  }
+}

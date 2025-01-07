@@ -24,14 +24,5 @@ export default {
     esbuild({ minify: true }),
     visualizer({ open: true }),
   ],
-  external: [
-    "path",
-    "fs",
-    "chalk",
-    "dotenv",
-    "commander",
-    "concurrently",
-    "cors",
-    "crypto-js",
-  ],
+  external: ["axios", "path", "crypto-js"],
 };
