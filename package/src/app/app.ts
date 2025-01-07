@@ -30,7 +30,6 @@ class App {
   }
 
   init() {
-    console.log("key:", this.key);
     return this.app;
   }
 
