@@ -1,3 +1,3 @@
 export const nexuKeys = {
-  router: "nexu_router",
+  router: "dcb332f2-981e-40a0-8bcc-d78c655c7631",
 };

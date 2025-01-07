@@ -32,6 +32,6 @@ export default {
     "commander",
     "concurrently",
     "cors",
-    "ncrypt-js",
+    "crypto-js",
   ],
 };

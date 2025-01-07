@@ -1,2 +1,3 @@
 export * from "./app/app";
-export * from "./types/index";
+export { default as defineConfig } from "./app/config";
+export type * from "./types/index";

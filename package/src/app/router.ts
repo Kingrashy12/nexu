@@ -5,17 +5,17 @@ import express, {
   Router,
   RouterOptions,
 } from "express";
-import ncrypt from "ncrypt-js";
 import { nexuKeys } from "./keys";
 import { randomUUID } from "crypto";
+import CryptoJS from "crypto-js";
 
 class NexuRouter {
   private router: Router;
-  private ncrypt: ncrypt;
+  private secret: string;
 
   constructor(secret?: string, options?: RouterOptions) {
     this.router = express.Router(options);
-    this.ncrypt = new ncrypt(secret || nexuKeys.router);
+    this.secret = secret || nexuKeys.router;
 
     // Extend HTTP methods to include encryption
     this.extendMethods();
@@ -46,6 +46,10 @@ class NexuRouter {
     });
   }
 
+  private encryptData(data: unknown) {
+    return CryptoJS.AES.encrypt(JSON.stringify(data), this.secret).toString();
+  }
+
   private wrapHandler(handler: express.RequestHandler): express.RequestHandler {
     return async (req: Request, res: Response, next: NextFunction) => {
       const originalJson = res.json.bind(res);
@@ -55,11 +59,11 @@ class NexuRouter {
         try {
           const payload = {
             data,
-            nonce: randomUUID(), // Unique random identifier
+            nonce: randomUUID(),
           };
 
-          const encryptedData = this.ncrypt.encrypt(JSON.stringify(payload));
-          return originalJson({ encrypted: encryptedData });
+          const encryptedData = this.encryptData(payload);
+          return originalJson({ nexu: encryptedData });
         } catch (error) {
           next(error);
           return res;

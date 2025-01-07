@@ -7,29 +7,30 @@ import { NexuNext, NexuRequest, NexuResponse } from "../types";
 import NexuRouter from "./router";
 import { nexuKeys } from "./keys";
 import cors, { CorsOptions } from "cors";
-import ncrypt from "ncrypt-js";
+import { readConfig } from "@/utils/config";
+import CryptoJS from "crypto-js";
 
 class App {
   private addonValue = "";
   app: Application;
   router: Router;
   private cors_config: CorsOptions = {};
-  private nexuRouter = new NexuRouter(nexuKeys.router).getRouter();
-  // private encryptRes = false;
-  private ncrypt = new ncrypt(nexuKeys.router);
+  private key = "";
+  private nexuRouter = new NexuRouter(this.key).getRouter();
+  private port: number;
   constructor() {
     this.app = express();
     this.router = this.nexuRouter;
-    // this.router = this.encryptRes ? this.nexuRouter : express.Router();
     this.registerRoutes();
-    this.app.use(cors({ ...this.cors_config }));
     this.app.use(express.json());
-    this.app.options("*", cors(this.cors_config));
     this.loadEnv();
+    this.port = readConfig()?.port || 5000;
+    this.key = readConfig()?.key || nexuKeys.router;
     this.start();
   }
 
   init() {
+    console.log("key:", this.key);
     return this.app;
   }
 
@@ -44,6 +45,8 @@ class App {
 
   private registerRoutes() {
     this.router.stack = [];
+    this.app.options("*", cors(this.cors_config));
+    this.app.use(cors(this.cors_config));
 
     const { routesName, routesPath } = routes;
     routesName.forEach((routeName, index) => {
@@ -71,7 +74,7 @@ class App {
   }
 
   private start() {
-    const PORT = process.env.PORT || 5000;
+    const PORT = this.port;
     this.app.listen(PORT, () => {
       console.log(`Server running on port http://localhost:${PORT}`);
     });
@@ -87,17 +90,12 @@ class App {
     this.registerRoutes();
   }
 
-  // secureRes() {
-  //   this.encryptRes = true;
-  //   this.router = this.nexuRouter;
-  //   this.registerRoutes();
-  // }
-
   decryptMiddleware(req: NexuRequest, res: NexuResponse, next: NexuNext) {
     try {
       if (req.body && req.body.encrypted) {
-        const decryptedBody = this.ncrypt.decrypt(req.body.encrypted);
-        req.body = JSON.parse(String(decryptedBody));
+        const bytes = CryptoJS.AES.decrypt(req.body.nexu, this.key);
+        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+        req.body = JSON.parse(decrypted);
       }
       next();
     } catch (error) {
