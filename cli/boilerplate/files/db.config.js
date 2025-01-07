@@ -1,12 +1,18 @@
+const key = crypto.randomUUID();
+
 export const envFile = () => {
-  const pg = `PG_USER=YourUserName
+  const pg = `NEXU_KEY=${key}
+PG_USER=YourUserName
 PG_DB=YourDatabase
 PG_PASS=YourPassword
 PG_HOST=YourHost`;
 
-  const mongo = `DB_STRING=Your Connection String`;
+  const mongo = `NEXU_KEY=${key}
+DB_STRING=Your Connection String`;
 
-  return { pg, mongo };
+  const main = `NEXU_KEY=${key}`;
+
+  return { pg, mongo, main };
 };
 
 export const dbConfig = () => {

@@ -1,8 +1,4 @@
-export const mainFile = `import bodyParser from 'body-parser';
-import { app } from "nexujs";
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+export const mainFile = `import { app } from "nexujs";
 
 app.get('/', (req, res) => {
   res.send('Hello, world!');
@@ -58,6 +54,7 @@ import { nexuRouter } from "nexujs";
 const router = nexuRouter;
 
 router.get("/", (req, res) => {
+  // Try Changing this to \`res.json\`
   res.send("Hi 👋, Welcome to the Nexu Express API.");
 });
 

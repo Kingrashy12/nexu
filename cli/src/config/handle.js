@@ -138,6 +138,8 @@ const createDBConfig = async (isTs, db, appName) => {
         break;
     }
     await createFile(envPath, files.envContent.mongo);
+  } else {
+    await createFile(envPath, files.envContent.main);
   }
 };
 
