@@ -8,9 +8,9 @@ import del from "rollup-plugin-delete";
 import PeerDepsExternalPlugin from "rollup-plugin-peer-deps-external";
 
 export default {
-  input: "src/index.ts", // Entry point
+  input: "src/index.ts",
   output: {
-    file: "dist/index.js", // Output file
+    file: "dist/index.js",
     format: "es",
     sourcemap: false,
   },

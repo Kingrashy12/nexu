@@ -16,6 +16,9 @@
     "client",
     "handler"
   ],
+  "files": [
+    "dist"
+  ],
   "author": "Rapheal Chizitere",
   "license": "MIT",
   "bugs": {
