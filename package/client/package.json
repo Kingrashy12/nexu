@@ -1,7 +1,7 @@
 {
   "name": "nexujs-client",
   "version": "0.1.0",
-  "description": "Client handler for nexujs request decrypt",
+  "description": "A secure HTTP client designed for seamless integration with NexuJS servers.",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
