@@ -6,18 +6,18 @@ import { logger } from "./logger";
 import { NexuNext, NexuRequest, NexuResponse } from "../types";
 import NexuRouter from "./router";
 import { nexuKeys } from "./keys";
-import cors, { CorsOptions } from "cors";
+import cors from "cors";
 import { readConfig } from "@/utils/config";
 import CryptoJS from "crypto-js";
-import bodyParser, { OptionsJson, OptionsUrlencoded } from "body-parser";
+import bodyParser from "body-parser";
 
 class App {
   private addonValue = "";
   app: Application;
   router: Router;
-  private cors_config: CorsOptions = {};
-  private bodyParserConfigJson: OptionsJson = {};
-  private bodyParserConfigUrl: OptionsUrlencoded = {};
+  private cors_config = {};
+  private bodyParserConfigJson = {};
+  private bodyParserConfigUrl = {};
   private key = "";
   private nexuRouter = new NexuRouter(this.key).getRouter();
   private port: number;
@@ -29,6 +29,9 @@ class App {
     this.loadEnv();
     this.port = readConfig()?.port || 5000;
     this.key = readConfig()?.key || nexuKeys.router;
+    this.cors_config = readConfig()?.corsConfig || {};
+    this.bodyParserConfigJson = readConfig()?.parserConfig?.json || {};
+    this.bodyParserConfigUrl = readConfig()?.parserConfig?.url || {};
     this.start();
   }
 
@@ -45,19 +48,12 @@ class App {
     this.registerRoutes();
   }
 
-  corsConfig(arg: CorsOptions) {
-    this.cors_config = arg;
-    this.app.use(cors({ ...this.cors_config }));
-    this.registerRoutes();
-  }
-
-  parserConfig(json?: OptionsJson, url?: OptionsUrlencoded) {
-    this.bodyParserConfigJson = json || {};
-    this.bodyParserConfigUrl = url || {};
-  }
-
   private registerRoutes() {
     this.router.stack = [];
+    this.cors_config = readConfig()?.corsConfig || {};
+    this.bodyParserConfigJson = readConfig()?.parserConfig?.json || {};
+    this.bodyParserConfigUrl = readConfig()?.parserConfig?.url || {};
+
     this.app.options("*", cors(this.cors_config));
     this.app.use(cors(this.cors_config));
     this.app.use(bodyParser.json(this.bodyParserConfigJson));

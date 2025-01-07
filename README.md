@@ -6,7 +6,8 @@ Nexu is a lightweight backend library built on Express.js, designed for modern w
 
 ## Repositories
 
-- **[Nexu](./package/README.md)**: Learn more about the core library and its features.
+- **[Nexu](./package/server/README.md)**: Learn more about the core library and its features.
+- **[Nexu-Client](./package/client/README.md)**: Understand how to integrate encrypted communication into your frontend applications.
 - **[NexuJs CLI](./cli/README.md)**: Explore the CLI tool for creating and managing NexuJs projects.
 
 ---

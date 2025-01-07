@@ -7,17 +7,19 @@
 - [File-Based Routing](#file-based-routing)
   - [File structure](#file-structure)
 - [Configuration](#configuration)
+- [Related Packages](#related-packages)
 - [License](#license)
 
-**Nexu** is a lightweight and scalable backend library built on top of Express.js, featuring file-based routing and addon support for seamless development of modern web applications.
+**Nexu** is a lightweight and scalable backend library built on top of Express.js, featuring file-based routing, encrypted requests for seamless development of modern web applications.
 
 ---
 
 ## Features
 
 - **File-Based Routing**: Automatically registers routes based on the file structure, allowing for better organization and scalability.
-- **Simple to Use**: Easy setup and minimal configuration required to get started.
-- **Full Express Support**: Built on top of Express, so you have access to the full power of Express.js for building web applications.
+- **Request Encryption**: Automatically encrypts incoming requests and decrypts them seamlessly using a shared secret key.
+- **Customizable Configuration**: Use `nexu.config.js` to define app configurations like port, CORS settings, and body parsers.
+- **Simple to Use**: Easy setup and minimal configuration required to get started
 
 ---
 
@@ -71,27 +73,51 @@ Nexu will automatically map this to `localhost:5000/auth`
 
 ## Configuration
 
-You can customize various aspects of **Nexu** to fit your needs. Here are a few key areas:
+You can customize various aspects of **Nexu** to fit your needs using the `nexu.config.js` file. This configuration file provides more flexibility and centralization for app-specific settings.
 
-- **Addon support**: You can add custom routing paths through the `addon()` method.
-
-Example:
+Example `nexu.config.js`:
 
 ```js
-// server.js
-import { app, nexu } from "nexujs";
+import { defineConfig } from "nexujs";
 
-nexu.addon("api");
+export default defineConfig({
+  port: 8080,
+  key: process.env.NEXU_KEY,
+  corsConfig: {
+    origin: "yourorigin.com",
+  },
+  parserConfig: {
+    json: {
+      limit: "50mb",
+    },
+    url: {
+      limit: "50mb",
+      extended: true,
+    },
+  },
+});
 ```
 
-This will modify the route paths to prefix them with `/api`, which will make this `localhost:5000/api/auth/login`
+- **Port Configuration**: Set the server's port directly in the `nexu.config.js` file using the port property.
+- **CORS Configuration**: Define custom CORS settings using `corsConfig`.
+- **Body Parser Configuration**: Adjust the parser settings like request body size limits with `parserConfig`.
 
-- **Changing Port**: To change the default port, add a `PORT` variable to your `.env` file.
+## Related Packages
 
-Example `.env` file:
+- **[nexujs-client](https://www.npmjs.com/package/nexujs-client)**: A complementary package for frontend applications. It automatically decrypts server responses and integrates seamlessly with Nexu
 
-```bash
-PORT=7000
+Example Usage:
+
+```js
+import { Post } from "nexujs-client";
+
+Post("/auth/login", { email: "john@gmail.com", password: "securepassword" })
+  .then((response) => {
+    console.log(response);
+  })
+  .catch((error) => {
+    console.error(error);
+  });
 ```
 
 ## License
