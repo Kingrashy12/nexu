@@ -1,6 +1,6 @@
 {
   "name": "nexujs-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A secure HTTP client designed for seamless integration with NexuJS servers.",
   "type": "module",
   "main": "dist/index.js",
@@ -12,9 +12,10 @@
     "url": "git+https://github.com/Kingrashy12/nexu.git"
   },
   "keywords": [
-    "nexu",
-    "client",
-    "handler"
+    "http-client",
+    "axios",
+    "frontend",
+    "nexu"
   ],
   "files": [
     "dist"
