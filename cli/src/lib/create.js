@@ -48,12 +48,9 @@ class CreateApp {
   }
 
   #success(name) {
-    console.log(`
-   ${chalk.whiteBright("Run the following")}
-   Commands:
-    ${chalk.greenBright(
-      name && `\cd ${this.projectName} && `
-    )}npm run dev   To start development server
+    console.log(`${chalk.whiteBright("Done. Now run")}
+
+${chalk.greenBright(name && `\cd ${this.projectName} && `)}npm run dev
     `);
   }
 
@@ -81,7 +78,7 @@ class CreateApp {
     await handleFiles(this.selectedLang, this.selectedDb, this.projectName);
 
     logger.success(
-      chalk.green(`\Project "${this.projectName}" created successfully!`)
+      chalk.green(`\Project "${this.projectName}" created successfully 🎉`)
     );
     const name = this.projectName !== "./" ? this.projectName : "";
     this.#success(name);

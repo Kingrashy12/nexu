@@ -4,6 +4,7 @@ import {
   gitignore,
   helloRoute,
   mainFile,
+  nexuConfig,
   nodemonFile,
   tsconfigFile,
 } from "../../boilerplate/files/files.js";
@@ -149,6 +150,7 @@ const createFiles = async (isTs, appName) => {
   await createFile(`${appName}/routes/hello${ext}`, helloRoute);
   await createFile(`${appName}/server${ext}`, mainFile);
   await createFile(`${appName}/.gitignore`, gitignore);
+  await createFile(`${appName}/nexu.config${ext}`, nexuConfig);
   if (ext === ".ts") {
     await createFile(`${appName}/nodemon.json`, nodemonFile);
     await createFile(`${appName}/tsconfig.json`, tsconfigFile);
@@ -162,6 +164,7 @@ const addFiles = async (isTs, appName, db) => {
     `server${ext}`,
     "package.json",
     ".gitignore",
+    `nexu.config${ext}`,
   ];
   const mongoclient = `config/mongoClient${ext}`;
   const pgclient = `config/postgresClient${ext}`;

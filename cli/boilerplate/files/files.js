@@ -55,7 +55,15 @@ const router = nexuRouter;
 
 router.get("/", (req, res) => {
   // Try Changing this to \`res.json\`
-  res.send("Hi 👋, Welcome to the Nexu Express API.");
+  res.send("Hi 👋, Welcome to the Nexu API.");
 });
 
 export default router;`;
+
+export const nexuConfig = `import { defineConfig } from "nexujs";
+
+export default defineConfig({
+  port: 5000,
+  key: process.env.NEXU_KEY,
+});
+`;
