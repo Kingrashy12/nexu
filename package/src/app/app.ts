@@ -9,13 +9,15 @@ import { nexuKeys } from "./keys";
 import cors, { CorsOptions } from "cors";
 import { readConfig } from "@/utils/config";
 import CryptoJS from "crypto-js";
-import bodyParser from "body-parser";
+import bodyParser, { OptionsJson, OptionsUrlencoded } from "body-parser";
 
 class App {
   private addonValue = "";
   app: Application;
   router: Router;
   private cors_config: CorsOptions = {};
+  private bodyParserConfigJson: OptionsJson = {};
+  private bodyParserConfigUrl: OptionsUrlencoded = {};
   private key = "";
   private nexuRouter = new NexuRouter(this.key).getRouter();
   private port: number;
@@ -43,12 +45,25 @@ class App {
     this.registerRoutes();
   }
 
+  corsConfig(arg: CorsOptions) {
+    this.cors_config = arg;
+    this.app.use(cors({ ...this.cors_config }));
+    this.registerRoutes();
+  }
+
+  parserConfig(json?: OptionsJson, url?: OptionsUrlencoded) {
+    this.bodyParserConfigJson = json || {};
+    this.bodyParserConfigUrl = url || {};
+  }
+
   private registerRoutes() {
     this.router.stack = [];
     this.app.options("*", cors(this.cors_config));
     this.app.use(cors(this.cors_config));
-    this.app.use(bodyParser.json());
-    this.app.use(bodyParser.urlencoded({ extended: true }));
+    this.app.use(bodyParser.json(this.bodyParserConfigJson));
+    this.app.use(
+      bodyParser.urlencoded({ extended: true, ...this.bodyParserConfigUrl })
+    );
 
     const { routesName, routesPath } = routes;
     routesName.forEach((routeName, index) => {
@@ -84,12 +99,6 @@ class App {
 
   private loadEnv() {
     return dotenv.config();
-  }
-
-  corsConfig(arg: CorsOptions) {
-    this.cors_config = arg;
-    this.app.use(cors({ ...this.cors_config }));
-    this.registerRoutes();
   }
 
   decryptMiddleware(req: NexuRequest, res: NexuResponse, next: NexuNext) {
