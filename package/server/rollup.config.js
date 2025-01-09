@@ -34,5 +34,6 @@ export default {
     "cors",
     "crypto-js",
     "helmet",
+    "express",
   ],
 };

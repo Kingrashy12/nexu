@@ -55,8 +55,7 @@
     "typescript": "^5.7.2"
   },
   "peerDependencies": {
-    "body-parser": "^1.20.3",
-    "express": "^4.21.2"
+    "body-parser": "^1.20.3"
   },
   "dependencies": {
     "chalk": "^5.4.1",
@@ -64,6 +63,7 @@
     "concurrently": "^9.1.2",
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
+    "express": "^4.21.2",
     "dotenv": "^16.4.7",
     "helmet": "^8.0.0"
   }
