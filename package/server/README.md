@@ -8,6 +8,7 @@
   - [File structure](#file-structure)
 - [Configuration](#configuration)
   - [Helmet Configuration](#helmet-configuration)
+- [Middleware](#middleware)
 - [Related Packages](#related-packages)
 - [License](#license)
 
@@ -164,6 +165,38 @@ export default defineConfig({
 - **Cross-Origin Policies**: Set `crossOriginEmbedderPolicy` and `crossOriginOpenerPolicy` for additional security.
 
 > **Note**: When adding comments inside the `nexu.config.js` file, always use block comments (`/* */`) instead of line comments (`//`). This is crucial because using line comments (`//`) in some configurations can cause file truncation or parsing issues, where parts of the file may be ignored or cut off entirely.
+
+## Middleware
+
+### useMiddleware
+
+The `useMiddleware` method allows you to apply multiple middleware functions to your application in a single call. It accepts an array of functions, ensuring that each function is a valid middleware before applying it.
+
+#### Example:
+
+```ts
+import { app, nexu, NexuMiddleware } from "nexujs";
+
+const loggingMiddleware: NexuMiddleware = (req, res, next) => {
+  console.log(`Request made to: ${req.url}`);
+  next();
+};
+
+const authMiddleware: NexuMiddleware = (req, res, next) => {
+  if (req.headers["authorization"]) {
+    next();
+  } else {
+    res.status(401).send("Unauthorized");
+  }
+};
+
+nexu.useMiddleware([loggingMiddleware, authMiddleware]);
+
+app.get("/", (req, res) => {
+  res.send("Hello, world!");
+  console.log("Hello world");
+});
+```
 
 ## Related Packages
 

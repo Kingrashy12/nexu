@@ -91,3 +91,9 @@ export interface Config {
 export interface EnforceHTTPSOptions {
   redirectHTTP: boolean;
 }
+
+export type NexuMiddleware = (
+  req: NexuRequest,
+  res: NexuResponse,
+  next: NexuNext
+) => void;

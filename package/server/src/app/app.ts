@@ -3,7 +3,7 @@ import routes from "./routes";
 import { pathToFileURL } from "url";
 import dotenv from "dotenv";
 import { logger } from "./logger";
-import { NexuNext, NexuRequest, NexuResponse } from "../types";
+import { NexuMiddleware, NexuNext, NexuRequest, NexuResponse } from "../types";
 import NexuRouter from "./router";
 import { nexuKeys } from "./keys";
 import cors from "cors";
@@ -49,8 +49,15 @@ class App {
     return this.router;
   }
 
-  useMiddleWare(ware: (() => void)[]) {
+  /**
+   * Registers an array of middleware functions to be used by the Express app.
+   * This method ensures that only valid functions are added as middleware.
+   *
+   * @param {Array<Function>} ware - An array of middleware functions to apply.
+   */
+  useMiddleware(ware: NexuMiddleware[]) {
     logger.info("Appling middleware...");
+
     if (Array.isArray(ware)) {
       ware.forEach((middleware) => {
         if (middleware && typeof middleware === "function") {
@@ -70,6 +77,7 @@ class App {
     const configOptions = this.Config?.helmetOptions;
 
     // Apply CSP policy
+
     this.app.use(helmet(configOptions));
   }
 
