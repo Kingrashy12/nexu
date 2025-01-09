@@ -15,7 +15,6 @@ export const getPkgWithDB = (appName) => {
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "express": "^4.21.1",
     "mongoose": "^8.8.1",
     "nexujs": "^0.1.1"
   },
@@ -42,7 +41,6 @@ export const getPkgWithDB = (appName) => {
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "express": "^4.21.1",
     "mongoose": "^8.8.1",
     "nexujs": "^0.1.1"
   },
@@ -72,7 +70,6 @@ export const getPkgWithDB = (appName) => {
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "express": "^4.21.1",
     "nexujs": "^0.1.1",
     "pg": "^8.13.1"
   },
@@ -99,7 +96,6 @@ export const getPkgWithDB = (appName) => {
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "express": "^4.21.1",
     "nexujs": "^0.1.1",
     "pg": "^8.13.1"
   },

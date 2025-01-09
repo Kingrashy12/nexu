@@ -32,8 +32,8 @@ export const nodemonFile = `{
 
 export const tsconfigFile = `{
   "compilerOptions": {
+    "target": "ES6",
     "module": "ESNext",
-    "target": "ESNext",
     "moduleResolution": "node",
     "esModuleInterop": true,
     "strict": true,
