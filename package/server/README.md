@@ -7,6 +7,7 @@
 - [File-Based Routing](#file-based-routing)
   - [File structure](#file-structure)
 - [Configuration](#configuration)
+  - [Helmet Configuration](#helmet-configuration)
 - [Related Packages](#related-packages)
 - [License](#license)
 
@@ -102,6 +103,67 @@ export default defineConfig({
 - **Port Configuration**: Set the server's port directly in the `nexu.config.js` file using the port property.
 - **CORS Configuration**: Define custom CORS settings using `corsConfig`.
 - **Body Parser Configuration**: Adjust the parser settings like request body size limits with `parserConfig`.
+
+### Helmet Configuration
+
+Nexu uses Helmet to automatically apply security headers such as Content Security Policy (CSP) and XSS filters. You can customize the Helmet configuration in your `nexu.config.js` file.
+
+Example `nexu.config.js` with Helmet configuration:
+
+```js
+import { defineConfig } from "nexujs";
+
+export default defineConfig({
+  helmetOptions: {
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"] /* Restrict all content to the same origin */,
+        scriptSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://trusted-cdn.com",
+        ] /* Allow inline scripts and trusted external sources */,
+        styleSrc: [
+          "'self'",
+          "'unsafe-inline'",
+          "https://trusted-cdn.com",
+        ] /* Allow inline styles and trusted external stylesheets */,
+        fontSrc: [
+          "'self'",
+          "https://fonts.gstatic.com",
+        ] /* Allow self and Google Fonts */,
+        imgSrc: [
+          "'self'",
+          "data:",
+          "https://trusted-image-cdn.com",
+        ] /* Allow images from trusted sources and data URIs */,
+        connectSrc: [
+          "'self'",
+          "https://api.example.com",
+        ] /* Allow connections to trusted APIs */,
+        objectSrc: ["'none'"] /* Prevent loading of Flash or other plugins */,
+        frameAncestors: [
+          "'none'",
+        ] /* Prevent the site from being embedded in a frame (clickjacking protection) */,
+        formAction: [
+          "'self'",
+        ] /* Only allow form submissions to the same origin */,
+        upgradeInsecureRequests:
+          [] /* Automatically upgrade HTTP requests to HTTPS */,
+      },
+    },
+    crossOriginEmbedderPolicy: true,
+    crossOriginOpenerPolicy: true,
+    xssFilter: true,
+  },
+});
+```
+
+- **Content Security Policy (CSP)**: Define your CSP settings to restrict the sources from which your app can load content (scripts, styles, etc.).
+- **XSS Filter**: Protect your app from cross-site scripting attacks with the xssFilter option.
+- **Cross-Origin Policies**: Set `crossOriginEmbedderPolicy` and `crossOriginOpenerPolicy` for additional security.
+
+> **Note**: When adding comments inside the `nexu.config.js` file, always use block comments (`/* */`) instead of line comments (`//`). This is crucial because using line comments (`//`) in some configurations can cause file truncation or parsing issues, where parts of the file may be ignored or cut off entirely.
 
 ## Related Packages
 
