@@ -10,9 +10,13 @@ import cors from "cors";
 import { readConfig } from "@/utils/config";
 import CryptoJS from "crypto-js";
 import bodyParser from "body-parser";
+import https from "https";
+import http from "http";
+import fs, { existsSync } from "fs";
+import path from "path";
+import helmet from "helmet";
 
 class App {
-  private addonValue = "";
   app: Application;
   router: Router;
   private cors_config = {};
@@ -21,17 +25,19 @@ class App {
   private key = "";
   private nexuRouter = new NexuRouter(this.key).getRouter();
   private port: number;
+  private Config = readConfig();
   constructor() {
     this.app = express();
     this.router = this.nexuRouter;
+    this.registerSecurityHeaders();
     this.registerRoutes();
     this.app.use(express.json());
     this.loadEnv();
-    this.port = readConfig()?.port || 5000;
-    this.key = readConfig()?.key || nexuKeys.router;
-    this.cors_config = readConfig()?.corsConfig || {};
-    this.bodyParserConfigJson = readConfig()?.parserConfig?.json || {};
-    this.bodyParserConfigUrl = readConfig()?.parserConfig?.url || {};
+    this.port = this.Config?.port || 5000;
+    this.key = this.Config?.key || nexuKeys.router;
+    this.cors_config = this.Config?.corsConfig || {};
+    this.bodyParserConfigJson = this.Config?.parserConfig?.json || {};
+    this.bodyParserConfigUrl = this.Config?.parserConfig?.url || {};
     this.start();
   }
 
@@ -43,16 +49,36 @@ class App {
     return this.router;
   }
 
-  addon(value: string) {
-    this.addonValue = value;
-    this.registerRoutes();
+  useMiddleWare(ware: (() => void)[]) {
+    logger.info("Appling middleware...");
+    if (Array.isArray(ware)) {
+      ware.forEach((middleware) => {
+        if (middleware && typeof middleware === "function") {
+          this.app.use(middleware);
+        }
+      });
+    } else {
+      logger.error(
+        "The 'use' property must be an array of functions. Received: " +
+          typeof ware
+      );
+    }
   }
 
-  private registerRoutes() {
+  private registerSecurityHeaders() {
+    // Using helmet to set security headers
+    const configOptions = this.Config?.helmetOptions;
+
+    // Apply CSP policy
+    this.app.use(helmet(configOptions));
+  }
+
+  private async registerRoutes() {
+    const Config = readConfig();
     this.router.stack = [];
-    this.cors_config = readConfig()?.corsConfig || {};
-    this.bodyParserConfigJson = readConfig()?.parserConfig?.json || {};
-    this.bodyParserConfigUrl = readConfig()?.parserConfig?.url || {};
+    this.cors_config = Config?.corsConfig || {};
+    this.bodyParserConfigJson = Config?.parserConfig?.json || {};
+    this.bodyParserConfigUrl = Config?.parserConfig?.url || {};
 
     this.app.options("*", cors(this.cors_config));
     this.app.use(cors(this.cors_config));
@@ -65,7 +91,7 @@ class App {
     routesName.forEach((routeName, index) => {
       const routePath = routesPath[index];
       const routeURL = pathToFileURL(routePath).href;
-      const addon = this.addonValue;
+      const addon = Config?.addonPrefix;
 
       const path = addon ? `/${addon}/${routeName}` : `/${routeName}`;
       this.app.use(
@@ -86,11 +112,78 @@ class App {
     this.app.use(this.router);
   }
 
+  startHttps(key: string, cert: string, port: number) {
+    // Start HTTP server for redirecting HTTP to HTTPS
+    const httpServer = http.createServer((req, res) => {
+      // Use Express for the response handling
+      this.app(req, res);
+    });
+
+    // Add middleware to redirect HTTP to HTTPS before passing to Express
+    httpServer.on("request", (req, res) => {
+      if (req.headers["x-forwarded-proto"] !== "https") {
+        res.writeHead(301, {
+          Location: `https://${req.headers.host}${req.url}`,
+        });
+        res.end();
+      } else {
+        this.app(req, res); // Let Express handle the request if HTTPS
+      }
+    });
+
+    // Start HTTP server on port 80
+    httpServer.listen(80, () => {
+      console.log("HTTP server running on http://localhost:80");
+    });
+
+    const fetchKeyPath = () => {
+      const keyPath = path.join(process.cwd(), key);
+      const certPath = path.join(process.cwd(), cert);
+
+      if (existsSync(keyPath) && existsSync(certPath)) {
+        const httpsOptions = {
+          key: fs.readFileSync(keyPath),
+          cert: fs.readFileSync(certPath),
+        };
+
+        return httpsOptions;
+      } else {
+        logger.error(`SSL/TLS key or certificate file missing. 
+          Key: ${keyPath} 
+          Cert: ${certPath}`);
+        return undefined;
+      }
+    };
+
+    // Start HTTPS server with SSL/TLS
+    const httpsOptions = fetchKeyPath();
+
+    if (httpsOptions) {
+      const httpsServer = https.createServer(httpsOptions, this.app);
+      const serverPort = port || 443;
+      httpsServer.listen(serverPort, () => {
+        logger.success(
+          `HTTPS server running on https://localhost:${serverPort}`
+        );
+      });
+    } else {
+      logger.error(
+        "Failed to start HTTPS server due to missing key/certificate."
+      );
+    }
+  }
+
   private start() {
     const PORT = this.port;
-    this.app.listen(PORT, () => {
-      console.log(`Server running on port http://localhost:${PORT}`);
-    });
+    const httpsKey = this.Config?.httpsKeyPaths;
+    if (httpsKey?.cert && httpsKey.key) {
+      const { key, cert } = httpsKey;
+      this.startHttps(key, cert, PORT);
+    } else {
+      this.app.listen(PORT, () => {
+        logger.success(`Server running on port http://localhost:${PORT}`);
+      });
+    }
   }
 
   private loadEnv() {

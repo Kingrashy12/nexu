@@ -33,5 +33,6 @@ export default {
     "concurrently",
     "cors",
     "crypto-js",
+    "helmet",
   ],
 };
