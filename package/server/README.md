@@ -20,6 +20,7 @@
 - **Request Encryption**: Automatically encrypts incoming requests and decrypts them seamlessly using a shared secret key.
 - **Customizable Configuration**: Use `nexu.config.js` to define app configurations like port, CORS settings, and body parsers.
 - **Simple to Use**: Easy setup and minimal configuration required to get started
+- **Security Headers**: Automatically applies security headers (like CSP and XSS filters) using Helmet for enhanced protection.
 
 ---
 

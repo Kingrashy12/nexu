@@ -10,8 +10,15 @@ export const readConfig = () => {
 
   try {
     const content = readFileSync(dir, "utf-8");
-    const trimed = content.replace(impt, "").trim().replace(/\s+/g, "").trim();
-    const match = trimed.match(/\{.*\}/)?.[0];
+    const trimmed = content.replace(impt, "").trim().replace(/\s+/g, "").trim();
+
+    // Remove all block comments (/* ... */)
+    const filteredContent = trimmed.replace(
+      /\/\*[\s\S]*?\*\//g,
+      "" // Replaces the comments with an empty string
+    );
+
+    const match = filteredContent.match(/\{.*\}/)?.[0];
     if (match) {
       const configObj: Config = new Function(`return ${match}`)();
       return { ...configObj };
