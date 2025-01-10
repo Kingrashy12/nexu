@@ -29,6 +29,8 @@ export interface Config {
   /**
    * An optional prefix that can be added to routes.
    * This can be used to define a custom path prefix for routes.
+   *
+   * **Note**: only use this when `fileBasedRouting` is enabled
    */
   addonPrefix?: string;
 

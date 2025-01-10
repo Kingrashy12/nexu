@@ -19,6 +19,7 @@ const externalDeps = [
   "crypto-js",
   "helmet",
   "express",
+  "body-parser",
 ];
 
 export default [
