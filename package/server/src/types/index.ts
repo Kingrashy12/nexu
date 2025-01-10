@@ -108,3 +108,5 @@ export type NexuMiddleware = (
   res: NexuResponse,
   next: NexuNext
 ) => void;
+
+export type NexuHandler = NexuMiddleware;
