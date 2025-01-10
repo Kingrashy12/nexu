@@ -32,7 +32,8 @@
   "files": [
     "dist",
     "dist/types",
-    "scripts"
+    "scripts",
+    "public"
   ],
   "keywords": [
     "express",

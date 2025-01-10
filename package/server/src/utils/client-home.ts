@@ -11,7 +11,7 @@ import { sendMsg } from "./print";
  * and should not be used else where.
  *
  */
-export const sendContent = () => `
+export const sendContent = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -35,18 +35,7 @@ export const sendContent = () => `
     </head>
     <body>
       <pre class="animated-text">${sendMsg().send}</pre>
-      <script>
-        const colors = ["blue", "red", "yellow", "green"];
-        let index = 0;
-        const element = document.querySelector(".animated-text");
-
-        function animateColors() {
-          element.style.color = colors[index];
-          index = (index + 1) % colors.length;
-        }
-
-        setInterval(animateColors, 1000);
-      </script>
+      <script src="/nexujs/script.js"></script>
     </body>
     </html>
   `;

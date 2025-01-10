@@ -99,6 +99,8 @@ export interface Config {
    * Experimental features configuration.
    */
   experimental?: NexuExperimental;
+  /** @deprecated This option is only for testing, use with caution */
+  disableHelmet?: boolean;
 }
 
 export interface EnforceHTTPSOptions {

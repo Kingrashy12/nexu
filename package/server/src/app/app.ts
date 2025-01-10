@@ -37,11 +37,12 @@ class App {
     this.cors_config = this.Config?.corsConfig || {};
     this.bodyParserConfigJson = this.Config?.parserConfig?.json || {};
     this.bodyParserConfigUrl = this.Config?.parserConfig?.url || {};
+    this.registerStaticFiles();
     this.useFileBasedRouting();
     this.start();
   }
 
-  init() {
+  init(): Application {
     return this.app;
   }
 
@@ -78,7 +79,29 @@ class App {
 
     // Apply CSP policy
 
-    this.app.use(helmet(configOptions));
+    if (!this.Config?.disableHelmet) {
+      this.app.use(helmet(configOptions));
+    }
+  }
+
+  private registerStaticFiles(): void {
+    logger.info("Checking public paths for static files...");
+    // Serve static files from 'public' directory in the root folder
+    const publicDir = path.join(process.cwd(), "public");
+    // Serve static files from 'nexujs/public' directory inside node_modules
+    const libDir = path.join(process.cwd(), "node_modules/nexujs/public");
+
+    // Check if the library static folder exists
+    if (existsSync(libDir)) {
+      logger.success("Serving static files from 'nexujs/public'.");
+      this.app.use("/nexujs", express.static(libDir)); // Mount at /nexujs path
+    }
+
+    // Serve static files from the local 'public' directory
+    if (existsSync(publicDir)) {
+      logger.success("Serving static files from 'public'.");
+      this.app.use(express.static(publicDir)); // Serve files at root path '/'
+    }
   }
 
   private useFileBasedRouting() {
@@ -89,8 +112,6 @@ class App {
           "This feature is not stable and may lead to unexpected behavior.\n" +
           "Please use it with caution."
       );
-
-      logger.warning("");
 
       this.registerRoutes();
     }
