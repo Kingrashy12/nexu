@@ -6,7 +6,6 @@ import esbuild from "rollup-plugin-esbuild";
 import { visualizer } from "rollup-plugin-visualizer";
 import del from "rollup-plugin-delete";
 import PeerDepsExternalPlugin from "rollup-plugin-peer-deps-external";
-import dts from "rollup-plugin-dts";
 
 const externalDeps = [
   "path",

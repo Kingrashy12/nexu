@@ -57,7 +57,6 @@
     "@types/express": "^5.0.0",
     "rollup": "^4.29.1",
     "rollup-plugin-delete": "^2.1.0",
-    "rollup-plugin-dts": "^6.1.1",
     "rollup-plugin-esbuild": "^6.1.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-visualizer": "^5.13.1",
@@ -65,6 +64,7 @@
     "typescript": "^5.7.2"
   },
   "dependencies": {
+    "body-parser": "^1.20.3",
     "chalk": "^4.1.2",
     "commander": "^13.0.0",
     "concurrently": "^9.1.2",
@@ -72,7 +72,6 @@
     "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "body-parser": "^1.20.3",
     "helmet": "^8.0.0"
   }
 }
