@@ -92,10 +92,4 @@ const handleDecryptedResponse = <T = unknown>(response: AxiosResponse): T => {
   return response.data;
 };
 
-export const {
-  post: Post,
-  patch: Patch,
-  get: Get,
-  put: Put,
-  delete: Delete,
-} = nexuClient;
+export default nexuClient;
