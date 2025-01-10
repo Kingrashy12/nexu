@@ -8,6 +8,33 @@ export type NexuResponse = Response;
 export type NexuNext = NextFunction;
 export type Method = "get" | "post" | "put" | "delete" | "patch";
 
+type NexuExperimental = {
+  /**
+   * Enables file-based routing functionality.
+   * If true, routes will be automatically generated based on the file structure.
+   */
+  fileBasedRouting?: boolean;
+  /**
+   * Optional SSL/TLS key and certificate configuration for HTTPS.
+   * Used when setting up secure HTTPS connections for the app.
+   */
+  httpsKeyPaths?: {
+    /**
+     * The relative path to the private key file.
+     * The path should be relative to the project root and must point to the private key file.
+     * @example "config/private-key.pem"
+     */
+    key: string;
+
+    /**
+     * The relative path to the SSL certificate file.
+     * The path should be relative to the project root and must point to the SSL certificate file.
+     * @example "config/certificate.pem"
+     */
+    cert: string;
+  };
+};
+
 export interface Config {
   /**
    * The port the server will listen on.
@@ -16,9 +43,9 @@ export interface Config {
   port: 443 | 5000 | 8000 | 8080;
 
   /**
-   * An optional key used for encryption.
+   * A shared key used for encryption.
    */
-  key?: string;
+  key: string;
 
   /**
    * Optional CORS configuration.
@@ -71,32 +98,7 @@ export interface Config {
   /**
    * Experimental features configuration.
    */
-  experimental?: {
-    /**
-     * Enables file-based routing functionality.
-     * If true, routes will be automatically generated based on the file structure.
-     */
-    fileBasedRouting?: boolean;
-    /**
-     * Optional SSL/TLS key and certificate configuration for HTTPS.
-     * Used when setting up secure HTTPS connections for the app.
-     */
-    httpsKeyPaths?: {
-      /**
-       * The relative path to the private key file.
-       * The path should be relative to the project root and must point to the private key file.
-       * @example "config/private-key.pem"
-       */
-      key: string;
-
-      /**
-       * The relative path to the SSL certificate file.
-       * The path should be relative to the project root and must point to the SSL certificate file.
-       * @example "config/certificate.pem"
-       */
-      cert: string;
-    };
-  };
+  experimental?: NexuExperimental;
 }
 
 export interface EnforceHTTPSOptions {

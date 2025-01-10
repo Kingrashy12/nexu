@@ -4,24 +4,27 @@
 
 - [Features](#features)
 - [Getting Started](#getting-started)
-- [File-Based Routing](#file-based-routing)
-  - [File structure](#file-structure)
 - [Configuration](#configuration)
+  - [Configuration API](#configuration-api)
   - [Helmet Configuration](#helmet-configuration)
+- [Experimental Features](#experimental-features)
+  - [File-Based Routing](#file-based-routing)
+    - [File structure](#file-structure)
 - [Middleware](#middleware)
+  - [useMiddleware](#usemiddleware)
 - [Related Packages](#related-packages)
 - [License](#license)
 
-**Nexu** is a lightweight and scalable backend library built on top of Express.js, featuring file-based routing, encrypted requests for seamless development of modern web applications.
+**Nexu** is a scalable backend library built on top of Express.js, featuring encrypted requests, middleware support, and seamless integration for modern web applications.
 
 ---
 
 ## Features
 
-- **File-Based Routing**: Automatically registers routes based on the file structure, allowing for better organization and scalability.
-- **Request Encryption**: Automatically encrypts incoming requests and decrypts them seamlessly using a shared secret key.
-- **Customizable Configuration**: Use `nexu.config.js` to define app configurations like port, CORS settings, and body parsers.
-- **Simple to Use**: Easy setup and minimal configuration required to get started
+- **File-Based Routing (Experimental)**: Automatically registers routes based on the file structure when enabled, allowing for better organization and scalability.
+- **Request and Response Encryption**: Ensures secure communication by automatically encrypting incoming requests and server responses using a shared secret key.
+- **Customizable Configuration**: Use `nexu.config.js` to define app configurations like port, CORS settings, body parsers, and security headers.
+- **Middleware Support**: Easily register multiple middleware functions with the `nexu.useMiddleware` method.
 - **Security Headers**: Automatically applies security headers (like CSP and XSS filters) using Helmet for enhanced protection.
 
 ---
@@ -50,33 +53,9 @@ Which database would you like to use?
 
 After the prompts, `nexujs-cli` will create a new Nexu project and install the required dependencies.
 
-## File-Based Routing
-
-**Nexu** automatically registers routes based on your file structure. To add a new route, simply create a JavaScript or TypeScript file inside the routes directory, and Nexu will automatically register it.
-
-For example:
-
-- Create a file at `routes/auth.js`.
-- Add your route handler in the file.
-
-### File structure
-
-```js
-import { nexuRouter } from "nexujs";
-import { loginController } from "./controllers/auth.js";
-
-const router = nexuRouter;
-
-router.post("/login", loginController);
-
-export default router;
-```
-
-Nexu will automatically map this to `localhost:5000/auth`
-
 ## Configuration
 
-You can customize various aspects of **Nexu** to fit your needs using the `nexu.config.js` file. This configuration file provides more flexibility and centralization for app-specific settings.
+The `nexu.config.js` file allows you to customize various aspects of your application, including port settings, middleware, body parsers, and security headers.
 
 Example `nexu.config.js`:
 
@@ -104,6 +83,40 @@ export default defineConfig({
 - **Port Configuration**: Set the server's port directly in the `nexu.config.js` file using the port property.
 - **CORS Configuration**: Define custom CORS settings using `corsConfig`.
 - **Body Parser Configuration**: Adjust the parser settings like request body size limits with `parserConfig`.
+
+**Encryption Details**
+
+- **Request Encryption**: Incoming requests are encrypted using a shared secret key defined in the key configuration.
+- **Response Encryption**: Outgoing server responses are also encrypted with the same shared key, ensuring end-to-end secure communication.
+
+> Important: The same `NEXU_KEY` used in your backend `.env` file must also be added to your client's `.env`
+> file to enable seamless encryption and decryption of requests and responses.
+
+For information on setting up the client-side encryption key, refer to the [nexujs-client README](../client/README.md#set-key).
+
+### Configuration API
+
+The **Configuration API** allows you to define key settings for your Nexu application. Each property in the configuration file serves a specific purpose and can be customized based on your requirements.
+
+````ts
+{
+  port: number;
+  key: string;
+  corsConfig?: CorsOptions;
+  parserConfig?: {
+    json?: OptionsJson;
+    url?: OptionsUrlencoded;
+  };
+  helmetOptions?: HelmetOptions;
+  experimental?: {
+    fileBasedRouting?: boolean;
+    httpsKeyPaths?: {
+    key: string;
+    cert: string;
+    };
+  };
+};
+```
 
 ### Helmet Configuration
 
@@ -158,13 +171,53 @@ export default defineConfig({
     xssFilter: true,
   },
 });
-```
+````
 
 - **Content Security Policy (CSP)**: Define your CSP settings to restrict the sources from which your app can load content (scripts, styles, etc.).
 - **XSS Filter**: Protect your app from cross-site scripting attacks with the xssFilter option.
 - **Cross-Origin Policies**: Set `crossOriginEmbedderPolicy` and `crossOriginOpenerPolicy` for additional security.
 
 > **Note**: When adding comments inside the `nexu.config.js` file, always use block comments (`/* */`) instead of line comments (`//`). This is crucial because using line comments (`//`) in some configurations can cause file truncation or parsing issues, where parts of the file may be ignored or cut off entirely.
+
+## Experimental Features
+
+### File-Based Routing
+
+**File-Based Routing** is now an experimental feature in Nexu. You can enable it by setting the `experimental.fileBasedRouting` option in your `nexu.config.js` file.
+
+This feature automatically registers routes based on your file structure. To add a new route, simply create a JavaScript or TypeScript file inside the routes directory, and Nexu will automatically register it.
+
+#### Enabling File-Based Routing
+
+```js
+import { defineConfig } from "nexujs";
+
+export default defineConfig({
+  experimental: {
+    fileBasedRouting: true,
+  },
+});
+```
+
+For example:
+
+- Create a file at `routes/auth.js`.
+- Add your route handler in the file.
+
+#### File structure
+
+```js
+import { nexuRouter } from "nexujs";
+import { loginController } from "./controllers/auth.js";
+
+const router = nexuRouter;
+
+router.post("/login", loginController);
+
+export default router;
+```
+
+When this feature is enabled, Nexu will automatically map this route to `localhost:5000/auth`.
 
 ## Middleware
 

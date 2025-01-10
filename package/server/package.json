@@ -45,7 +45,7 @@
   ],
   "author": "Rapheal Chizitere",
   "license": "MIT",
-  "description": "A lightweight Express.js library with file-based routing for modern backend development.",
+  "description": "A scalable backend library built on top of Express.js.",
   "devDependencies": {
     "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-commonjs": "^28.0.2",
