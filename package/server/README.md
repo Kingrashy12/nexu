@@ -98,7 +98,7 @@ For information on setting up the client-side encryption key, refer to the [nexu
 
 The **Configuration API** allows you to define key settings for your Nexu application. Each property in the configuration file serves a specific purpose and can be customized based on your requirements.
 
-````ts
+```ts
 {
   port: number;
   key: string;
@@ -171,7 +171,7 @@ export default defineConfig({
     xssFilter: true,
   },
 });
-````
+```
 
 - **Content Security Policy (CSP)**: Define your CSP settings to restrict the sources from which your app can load content (scripts, styles, etc.).
 - **XSS Filter**: Protect your app from cross-site scripting attacks with the xssFilter option.
