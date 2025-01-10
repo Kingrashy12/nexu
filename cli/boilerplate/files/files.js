@@ -1,7 +1,7 @@
-export const mainFile = `import { app } from "nexujs";
+export const mainFile = `import { app, sendContent } from "nexujs";
 
 app.get('/', (req, res) => {
-  res.send('Hello, world!');
+   res.send(sendContent); 
 });`;
 
 export const gitignore = `# Node.js dependencies
@@ -50,13 +50,14 @@ export const tsconfigFile = `{
 }`;
 
 export const helloRoute = `// All routes should be structured as follows
-import { nexuRouter } from "nexujs";
+import { nexuRouter, sendMsg } from "nexujs";
 
 const router = nexuRouter;
 
 router.get("/", (req, res) => {
   // Try Changing this to \`res.json\`
-  res.send("Hi 👋, Welcome to the Nexu API.");
+  res.send("Hi 👋, Welcome to the Nexu.");
+  console.log(sendMsg().log);
 });
 
 export default router;`;
