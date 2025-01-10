@@ -1,4 +1,4 @@
-import { Config } from "@/types";
+import { Config } from "../types";
 import { existsSync, readFileSync } from "fs";
 import path from "path";
 

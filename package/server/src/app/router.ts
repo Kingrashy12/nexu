@@ -65,6 +65,8 @@ class NexuRouter {
           const encryptedData = this.encryptData(payload);
           return originalJson({ nexu: encryptedData });
         } catch (error) {
+          const errMsg = error as any;
+          console.error(`[NexuRouter] Encryption error: ${errMsg.message}`);
           next(error);
           return res;
         }

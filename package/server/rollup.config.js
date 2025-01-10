@@ -6,34 +6,49 @@ import esbuild from "rollup-plugin-esbuild";
 import { visualizer } from "rollup-plugin-visualizer";
 import del from "rollup-plugin-delete";
 import PeerDepsExternalPlugin from "rollup-plugin-peer-deps-external";
+import dts from "rollup-plugin-dts";
 
-export default {
-  input: "src/index.ts", // Entry point
-  output: {
-    file: "dist/index.js", // Output file
-    format: "es",
-    sourcemap: false,
+const externalDeps = [
+  "path",
+  "fs",
+  "chalk",
+  "dotenv",
+  "commander",
+  "concurrently",
+  "cors",
+  "crypto-js",
+  "helmet",
+  "express",
+];
+
+export default [
+  {
+    input: "src/index.ts", // Entry point
+    output: [
+      {
+        file: "dist/index.cjs",
+        format: "cjs",
+        sourcemap: true,
+      },
+      {
+        file: "dist/index.js",
+        format: "es",
+        sourcemap: true,
+      },
+    ],
+    plugins: [
+      del({ targets: "dist/*" }),
+      resolve(),
+      PeerDepsExternalPlugin(),
+      commonjs(),
+      json(),
+      typescript({
+        tsconfig: "./tsconfig.json",
+        // declarationDir: "./dist/esm"
+      }),
+      esbuild({ minify: true }),
+      visualizer({ open: true }),
+    ],
+    external: externalDeps,
   },
-  plugins: [
-    del({ targets: "dist/*" }),
-    resolve(),
-    PeerDepsExternalPlugin(),
-    commonjs(),
-    json(),
-    typescript({ tsconfig: "./tsconfig.json" }),
-    esbuild({ minify: true }),
-    visualizer({ open: true }),
-  ],
-  external: [
-    "path",
-    "fs",
-    "chalk",
-    "dotenv",
-    "commander",
-    "concurrently",
-    "cors",
-    "crypto-js",
-    "helmet",
-    "express",
-  ],
-};
+];

@@ -7,7 +7,7 @@ import { NexuMiddleware, NexuNext, NexuRequest, NexuResponse } from "../types";
 import NexuRouter from "./router";
 import { nexuKeys } from "./keys";
 import cors from "cors";
-import { readConfig } from "@/utils/config";
+import { readConfig } from "../utils/config";
 import CryptoJS from "crypto-js";
 import bodyParser from "body-parser";
 import https from "https";
@@ -30,7 +30,6 @@ class App {
     this.app = express();
     this.router = this.nexuRouter;
     this.registerSecurityHeaders();
-    this.registerRoutes();
     this.app.use(express.json());
     this.loadEnv();
     this.port = this.Config?.port || 5000;
@@ -38,6 +37,7 @@ class App {
     this.cors_config = this.Config?.corsConfig || {};
     this.bodyParserConfigJson = this.Config?.parserConfig?.json || {};
     this.bodyParserConfigUrl = this.Config?.parserConfig?.url || {};
+    this.useFileBasedRouting();
     this.start();
   }
 
@@ -81,9 +81,23 @@ class App {
     this.app.use(helmet(configOptions));
   }
 
-  private async registerRoutes() {
+  private useFileBasedRouting() {
+    const autoRoutes = this.Config?.experimental?.fileBasedRouting;
+    if (autoRoutes) {
+      logger.warning(
+        "The experimental feature 'fileBasedRouting' is enabled.\n" +
+          "This feature is not stable and may lead to unexpected behavior.\n" +
+          "Please use it with caution."
+      );
+
+      logger.warning("");
+
+      this.registerRoutes();
+    }
+  }
+
+  private registerRoutes() {
     const Config = readConfig();
-    this.router.stack = [];
     this.cors_config = Config?.corsConfig || {};
     this.bodyParserConfigJson = Config?.parserConfig?.json || {};
     this.bodyParserConfigUrl = Config?.parserConfig?.url || {};
@@ -96,28 +110,39 @@ class App {
     );
 
     const { routesName, routesPath } = routes;
+
     routesName.forEach((routeName, index) => {
       const routePath = routesPath[index];
       const routeURL = pathToFileURL(routePath).href;
       const addon = Config?.addonPrefix;
-
       const path = addon ? `/${addon}/${routeName}` : `/${routeName}`;
+
       this.app.use(
         path,
         this.decryptMiddleware.bind(this),
         async (req: NexuRequest, res: NexuResponse, next: NexuNext) => {
           try {
             const module = await import(routeURL);
-            module.default(req, res, next);
+            if (module.default) {
+              module.default(req, res, next); // Route logic
+            } else {
+              console.error(`[NexuApp] Invalid route module at ${routeURL}`);
+              res
+                .status(500)
+                .send({ error: "Route module not properly exported" });
+            }
           } catch (error) {
-            logger.error(error);
+            logger.error(`Error loading route ${path}:`, error);
             next(error);
           }
         }
       );
     });
 
-    this.app.use(this.router);
+    // Catch-all route for 404 errors
+    this.app.use((req, res) => {
+      res.status(404).send("Route not found");
+    });
   }
 
   startHttps(key: string, cert: string, port: number) {
@@ -183,7 +208,7 @@ class App {
 
   private start() {
     const PORT = this.port;
-    const httpsKey = this.Config?.httpsKeyPaths;
+    const httpsKey = this.Config?.experimental?.httpsKeyPaths;
     if (httpsKey?.cert && httpsKey.key) {
       const { key, cert } = httpsKey;
       this.startHttps(key, cert, PORT);
@@ -208,6 +233,7 @@ class App {
       next();
     } catch (error) {
       res.status(400).send({ error: "Failed to decrypt request data" });
+      next(error);
     }
   }
 }

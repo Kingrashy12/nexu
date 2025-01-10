@@ -1,4 +1,4 @@
-import { logger } from "@/app/logger";
+import { logger } from "../app/logger";
 import { EnforceHTTPSOptions } from "../types";
 import { Application, Request, Response, NextFunction } from "express";
 

@@ -1,8 +1,16 @@
 {
   "name": "nexujs",
   "version": "0.1.7",
-  "main": "dist/index.js",
   "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kingrashy12/nexu.git"
@@ -16,6 +24,7 @@
   },
   "scripts": {
     "build": "rollup -c",
+    "build:ts": "tsc",
     "start": "nodemon dist/server.js",
     "dev": "nodemon server.js",
     "dev-ts": "concurrently \"tsc --watch\" \"nodemon dist/server.js\""
@@ -48,6 +57,7 @@
     "@types/express": "^5.0.0",
     "rollup": "^4.29.1",
     "rollup-plugin-delete": "^2.1.0",
+    "rollup-plugin-dts": "^6.1.1",
     "rollup-plugin-esbuild": "^6.1.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-visualizer": "^5.13.1",
@@ -58,13 +68,13 @@
     "body-parser": "^1.20.3"
   },
   "dependencies": {
-    "chalk": "^5.4.1",
+    "chalk": "^4.1.2",
     "commander": "^13.0.0",
     "concurrently": "^9.1.2",
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
-    "express": "^4.21.2",
     "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "helmet": "^8.0.0"
   }
 }

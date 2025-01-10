@@ -47,26 +47,6 @@ export interface Config {
      */
     url: OptionsUrlencoded;
   };
-
-  /**
-   * Optional SSL/TLS key and certificate configuration for HTTPS.
-   * Used when setting up secure HTTPS connections for the app.
-   */
-  httpsKeyPaths?: {
-    /**
-     * The relative path to the private key file.
-     * The path should be relative to the project root and must point to the private key file.
-     * @example "config/private-key.pem"
-     */
-    key: string;
-
-    /**
-     * The relative path to the SSL certificate file.
-     * The path should be relative to the project root and must point to the SSL certificate file.
-     * @example "config/certificate.pem"
-     */
-    cert: string;
-  };
   /**
    * Optional configuration object for customizing the security headers in your app.
    * This configuration is passed to the `helmet` middleware to control security headers such as CSP, XSS filtering, and more.
@@ -86,6 +66,35 @@ export interface Config {
    * });
    */
   helmetOptions?: HelmetOptions;
+  /**
+   * Experimental features configuration.
+   */
+  experimental?: {
+    /**
+     * Enables file-based routing functionality.
+     * If true, routes will be automatically generated based on the file structure.
+     */
+    fileBasedRouting?: boolean;
+    /**
+     * Optional SSL/TLS key and certificate configuration for HTTPS.
+     * Used when setting up secure HTTPS connections for the app.
+     */
+    httpsKeyPaths?: {
+      /**
+       * The relative path to the private key file.
+       * The path should be relative to the project root and must point to the private key file.
+       * @example "config/private-key.pem"
+       */
+      key: string;
+
+      /**
+       * The relative path to the SSL certificate file.
+       * The path should be relative to the project root and must point to the SSL certificate file.
+       * @example "config/certificate.pem"
+       */
+      cert: string;
+    };
+  };
 }
 
 export interface EnforceHTTPSOptions {
