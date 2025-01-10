@@ -1,6 +1,6 @@
 # Nexu
 
-Nexu is a lightweight backend library built on Express.js, designed for modern web applications with file-based routing. It is complemented by the **NexuJs CLI**, which simplifies project scaffolding and dependency management.
+**Nexu** is a scalable backend library built on top of Express.js, featuring encrypted requests, middleware support, and seamless integration for modern web applications.
 
 ---
 
