@@ -32,9 +32,10 @@ export const nodemonFile = `{
 
 export const tsconfigFile = `{
   "compilerOptions": {
-    "target": "ES6",
-    "module": "ESNext",
+    "target": "ESNext",
+    "module": "CommonJS",
     "moduleResolution": "node",
+    "lib": ["ESNext", "ES6"],
     "esModuleInterop": true,
     "strict": true,
     "noUnusedLocals": true,

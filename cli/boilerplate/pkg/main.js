@@ -14,7 +14,6 @@ export const getPkg = (appName) => {
  "author": "", 
  "license": "ISC",
  "dependencies": {
-  "body-parser": "^1.20.2",
   "nexujs": "^0.1.1"
  },
  "devDependencies": {
@@ -39,7 +38,6 @@ export const getPkg = (appName) => {
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.20.2",
     "nexujs": "^0.1.1"
   },
   "devDependencies": {
