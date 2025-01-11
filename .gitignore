@@ -2,20 +2,17 @@
 /test
 /cli/node_modules
 
-/package/client/node_modules
-/package/client/stats.html
-/package/client/nexujs-client-*.tgz
-/package/client/dist
+/packages/**/node_modules
+/packages/**/stats.html
+/packages/**/dist
 
-/package/server/node_modules
-/package/server/stats.html
-/package/server/dist
-/package/server/nexujs-*.tgz
-/package/server/t.js
+/packages/nexujs-client/nexujs-client-*.tgz
+/packages/nexujs-client/dist
 
-/package/node_modules
+/packages/nexujs/nexujs-*.tgz
+/packages/nexujs/t.js
 
 /node_modules
 .env
 .releaserc.json
-/package-lock.json
+/packages-lock.json
