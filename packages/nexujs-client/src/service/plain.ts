@@ -1,5 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
-import handleDecryptedResponse from "../gate";
+import handleDecryptedResponse, { encryptPayload } from "../gate";
 
 const nexuClient = {
   async post<T = unknown>(
@@ -7,7 +7,12 @@ const nexuClient = {
     data?: unknown,
     config?: AxiosRequestConfig
   ): Promise<T> {
-    const response: AxiosResponse = await axios.post(url, data, config);
+    const encryptedData = data ? encryptPayload(data) : undefined;
+    const response: AxiosResponse = await axios.post(
+      url,
+      encryptedData,
+      config
+    );
     return handleDecryptedResponse(response);
   },
 
@@ -21,7 +26,12 @@ const nexuClient = {
     data?: unknown,
     config?: AxiosRequestConfig
   ): Promise<T> {
-    const response: AxiosResponse = await axios.patch(url, data, config);
+    const encryptedData = data ? encryptPayload(data) : undefined;
+    const response: AxiosResponse = await axios.patch(
+      url,
+      encryptedData,
+      config
+    );
     return handleDecryptedResponse(response);
   },
 
@@ -30,7 +40,8 @@ const nexuClient = {
     data?: unknown,
     config?: AxiosRequestConfig
   ): Promise<T> {
-    const response: AxiosResponse = await axios.put(url, data, config);
+    const encryptedData = data ? encryptPayload(data) : undefined;
+    const response: AxiosResponse = await axios.put(url, encryptedData, config);
     return handleDecryptedResponse(response);
   },
 

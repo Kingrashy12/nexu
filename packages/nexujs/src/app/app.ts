@@ -145,7 +145,6 @@ class App {
 
       this.app.use(
         path,
-        this.decryptMiddleware.bind(this),
         async (req: NexuRequest, res: NexuResponse, next: NexuNext) => {
           try {
             const module = await import(routeURL);
@@ -247,20 +246,6 @@ class App {
 
   private loadEnv() {
     return dotenv.config();
-  }
-
-  decryptMiddleware(req: NexuRequest, res: NexuResponse, next: NexuNext) {
-    try {
-      if (req.body && req.body.encrypted) {
-        const bytes = CryptoJS.AES.decrypt(req.body.nexu, this.key);
-        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
-        req.body = JSON.parse(decrypted);
-      }
-      next();
-    } catch (error) {
-      res.status(400).send({ error: "Failed to decrypt request data" });
-      next(error);
-    }
   }
 }
 

@@ -1,13 +1,8 @@
-import express, {
-  Request,
-  Response,
-  NextFunction,
-  Router,
-  RouterOptions,
-} from "express";
+import express, { Request, NextFunction, Router, RouterOptions } from "express";
 import { nexuKeys } from "./keys";
 import { randomUUID } from "crypto";
 import CryptoJS from "crypto-js";
+import { NexuRequest, NexuResponse } from "../types";
 
 class NexuRouter {
   private router: Router;
@@ -50,8 +45,38 @@ class NexuRouter {
     return CryptoJS.AES.encrypt(JSON.stringify(data), this.secret).toString();
   }
 
+  private decryptData(data: string) {
+    const bytes = CryptoJS.AES.decrypt(data, this.secret);
+    const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+    const body = JSON.parse(decrypted);
+    return body;
+  }
+
+  // Middleware to decrypt request body before the handler
+  private decryptRequestBody(
+    req: Request,
+    res: NexuResponse,
+    next: NextFunction
+  ) {
+    try {
+      // Check if the body is encrypted
+      if (req.body && req.body.nexu) {
+        const decryptedData = this.decryptData(req.body.nexu);
+        req.body = decryptedData; // Replace the encrypted body with the decrypted data
+      }
+      next(); // Proceed to the handler
+    } catch (error) {
+      type Error = { message: string };
+      console.error("[NexuRouter] Decryption error:", (error as Error).message);
+      res.status(400).send({ error: "Failed to decrypt request data" });
+      next(error);
+    }
+  }
+
   private wrapHandler(handler: express.RequestHandler): express.RequestHandler {
-    return async (req: Request, res: Response, next: NextFunction) => {
+    return async (req: NexuRequest, res: NexuResponse, next: NextFunction) => {
+      this.decryptRequestBody(req, res, next);
+
       const originalJson = res.json.bind(res);
 
       // Override res.json to encrypt the response

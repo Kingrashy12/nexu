@@ -38,6 +38,11 @@ const decryptResponse = (encryptedData: string) => {
   return data.data;
 };
 
+export const encryptPayload = (data: unknown) => {
+  const nexu = CryptoJS.AES.encrypt(JSON.stringify(data), getKey()).toString();
+  return { nexu };
+};
+
 // Helper function to decrypt the response
 const handleDecryptedResponse = <T = unknown>(response: AxiosResponse): T => {
   // Check if the response contains an encrypted payload
