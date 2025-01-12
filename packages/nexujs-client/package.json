@@ -1,6 +1,6 @@
 {
   "name": "nexujs-client",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A secure HTTP client designed for seamless integration with NexuJS servers.",
   "type": "module",
   "main": "dist/index.js",
