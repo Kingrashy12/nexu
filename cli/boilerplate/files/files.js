@@ -66,6 +66,6 @@ export const nexuConfig = `import { defineConfig } from "nexujs";
 
 export default defineConfig({
   port: 5000,
-  key: process.env.NEXU_KEY,
+  key: String(process.env.NEXU_KEY),
 });
 `;
