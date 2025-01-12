@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import CryptoJS from "crypto-js";
 
 const getKey = (): string => {
@@ -38,49 +38,6 @@ const decryptResponse = (encryptedData: string) => {
   return data.data;
 };
 
-// Create an extended Axios client
-const nexuClient = {
-  async post<T = unknown>(
-    url: string,
-    data?: unknown,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
-    const response: AxiosResponse = await axios.post(url, data, config);
-    return handleDecryptedResponse(response);
-  },
-
-  async get<T = unknown>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    const response: AxiosResponse = await axios.get(url, config);
-    return handleDecryptedResponse(response);
-  },
-
-  async patch<T = unknown>(
-    url: string,
-    data?: unknown,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
-    const response: AxiosResponse = await axios.patch(url, data, config);
-    return handleDecryptedResponse(response);
-  },
-
-  async put<T = unknown>(
-    url: string,
-    data?: unknown,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
-    const response: AxiosResponse = await axios.put(url, data, config);
-    return handleDecryptedResponse(response);
-  },
-
-  async delete<T = unknown>(
-    url: string,
-    config?: AxiosRequestConfig
-  ): Promise<T> {
-    const response: AxiosResponse = await axios.delete(url, config);
-    return handleDecryptedResponse(response);
-  },
-};
-
 // Helper function to decrypt the response
 const handleDecryptedResponse = <T = unknown>(response: AxiosResponse): T => {
   // Check if the response contains an encrypted payload
@@ -92,4 +49,4 @@ const handleDecryptedResponse = <T = unknown>(response: AxiosResponse): T => {
   return response.data;
 };
 
-export default nexuClient;
+export default handleDecryptedResponse;

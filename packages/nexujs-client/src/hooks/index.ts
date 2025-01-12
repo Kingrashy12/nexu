@@ -1,46 +1,29 @@
 import { AxiosRequestConfig } from "axios";
-import { useEffect, useState } from "react";
-import { Error, UseFetchResponse } from "../types";
-import nexuClient from "../gate";
-
-export const {
-  post: Post,
-  patch: Patch,
-  get: Get,
-  put: Put,
-  delete: Delete,
-} = nexuClient;
+import { Error, FetchResponse } from "../types";
+import nexuClient from "../service/plain";
 
 const getError = (error: Error) => {
   const errMsg = error.response?.data || error.message || error.error;
   return errMsg.toString();
 };
 
-const useFetch = <T>(
+const fetchData = async <T>(
   uri: string,
   config?: AxiosRequestConfig
-): UseFetchResponse<T> => {
-  const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string>("");
+): Promise<FetchResponse<T>> => {
+  let data: T | null = null;
+  let error = "";
+  let loading = true;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await nexuClient.get<T>(uri, config);
-        setData(response);
-      } catch (error) {
-        const errMsg = getError(error as any);
-        setError(error instanceof Error ? errMsg : "Unknown error occurred");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [uri, config]);
+  try {
+    data = await nexuClient.get<T>(uri, config);
+  } catch (err) {
+    error = getError(err as Error);
+  } finally {
+    loading = false;
+  }
 
   return { data, error, loading };
 };
 
-export { useFetch };
+export default fetchData;
