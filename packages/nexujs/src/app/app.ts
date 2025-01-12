@@ -39,6 +39,7 @@ class App {
     this.bodyParserConfigUrl = this.Config?.parserConfig?.url || {};
     this.registerStaticFiles();
     this.useFileBasedRouting();
+    this.useConfig();
     this.start();
   }
 
@@ -117,18 +118,22 @@ class App {
     }
   }
 
-  private registerRoutes() {
-    const Config = readConfig();
-    this.cors_config = Config?.corsConfig || {};
-    this.bodyParserConfigJson = Config?.parserConfig?.json || {};
-    this.bodyParserConfigUrl = Config?.parserConfig?.url || {};
-
+  private useConfig() {
     this.app.options("*", cors(this.cors_config));
     this.app.use(cors(this.cors_config));
     this.app.use(bodyParser.json(this.bodyParserConfigJson));
     this.app.use(
       bodyParser.urlencoded({ extended: true, ...this.bodyParserConfigUrl })
     );
+  }
+
+  private registerRoutes() {
+    const Config = readConfig();
+    this.cors_config = Config?.corsConfig || {};
+    this.bodyParserConfigJson = Config?.parserConfig?.json || {};
+    this.bodyParserConfigUrl = Config?.parserConfig?.url || {};
+
+    this.useConfig();
 
     const { routesName, routesPath } = routes;
 
