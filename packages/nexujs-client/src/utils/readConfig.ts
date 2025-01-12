@@ -6,7 +6,7 @@ export const readConfig = () => {
   const tsConfig = path.join(process.cwd(), "/tsconfig.json");
   const extention = existsSync(tsConfig) ? ".ts" : ".js";
   const dir = path.join(process.cwd(), `/nexu.config${extention}`);
-  const impt = 'import { defineConfig } from "nexujs";';
+  const impt = 'import { defineConfig } from "nexujs-client";';
 
   try {
     const content = readFileSync(dir, "utf-8");

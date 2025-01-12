@@ -7,6 +7,9 @@
   "scripts": {
     "build": "rollup -c"
   },
+  "bin": {
+    "md-config": "./scripts/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kingrashy12/nexu.git"
@@ -18,7 +21,8 @@
     "nexu"
   ],
   "files": [
-    "dist"
+    "dist",
+    "scripts"
   ],
   "author": "Rapheal Chizitere",
   "license": "MIT",
