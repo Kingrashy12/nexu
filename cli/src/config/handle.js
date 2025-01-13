@@ -18,14 +18,16 @@ import { installPkg } from "./deps.js";
 import { execSync } from "child_process";
 
 export const Files = (appName) => {
-  const pkg = getPkg(appName).js;
-  const pkgTs = getPkg(appName).ts;
+  const name = appName === "./" ? "nexu-server" : appName;
 
-  const mongoMain = getPkgWithDB(appName).mongoMain;
-  const mongoTs = getPkgWithDB(appName).mongoTs;
+  const pkg = getPkg(name).js;
+  const pkgTs = getPkg(name).ts;
 
-  const pgMain = getPkgWithDB(appName).pgMain;
-  const pgTs = getPkgWithDB(appName).pgTs;
+  const mongoMain = getPkgWithDB(name).mongoMain;
+  const mongoTs = getPkgWithDB(name).mongoTs;
+
+  const pgMain = getPkgWithDB(name).pgMain;
+  const pgTs = getPkgWithDB(name).pgTs;
 
   const serverFile = mainFile;
 
