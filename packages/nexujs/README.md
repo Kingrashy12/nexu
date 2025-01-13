@@ -177,8 +177,6 @@ export default defineConfig({
 - **XSS Filter**: Protect your app from cross-site scripting attacks with the xssFilter option.
 - **Cross-Origin Policies**: Set `crossOriginEmbedderPolicy` and `crossOriginOpenerPolicy` for additional security.
 
-> **Note**: When adding comments inside the `nexu.config.js` file, always use block comments (`/* */`) instead of line comments (`//`). This is crucial because using line comments (`//`) in some configurations can cause file truncation or parsing issues, where parts of the file may be ignored or cut off entirely.
-
 ## Experimental Features
 
 ### File-Based Routing
