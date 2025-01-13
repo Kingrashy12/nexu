@@ -26,7 +26,6 @@ export const getPkg = (appName) => {
   "version": "1.0.0",
   "description": "This project was bootstrapped with NexuJs-CLI.",
   "main": "server.ts",
-  "type": "module",
   "private": "true",
   "scripts": {
   "build": "tsc",

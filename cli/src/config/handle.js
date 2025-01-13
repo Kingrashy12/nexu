@@ -15,6 +15,7 @@ import { createFile } from "./file.js";
 import { selected } from "./select.js";
 import chalk from "chalk";
 import { installPkg } from "./deps.js";
+import { execSync } from "child_process";
 
 export const Files = (appName) => {
   const pkg = getPkg(appName).js;
@@ -188,6 +189,7 @@ const addFiles = async (isTs, appName, db) => {
       log.message(chalk.blueBright(`/${file}`));
     }
     log.success(chalk.greenBright("Project created successfully!"));
+    execSync("git init", { stdio: "inherit" });
     await installPkg(appName);
   } catch (error) {
     logger.error(error);
