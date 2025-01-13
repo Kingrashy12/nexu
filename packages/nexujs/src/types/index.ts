@@ -45,7 +45,10 @@ export interface Config {
   /**
    * A shared key used for encryption.
    */
-  key: string;
+  keys: {
+    public: string;
+    private: string;
+  };
 
   /**
    * Optional CORS configuration.

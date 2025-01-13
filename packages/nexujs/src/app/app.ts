@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 import { logger } from "./logger";
 import { NexuMiddleware, NexuNext, NexuRequest, NexuResponse } from "../types";
 import NexuRouter from "./router";
-import { nexuKeys } from "./keys";
 import cors from "cors";
 import bodyParser from "body-parser";
 import https from "https";
@@ -21,8 +20,7 @@ class App {
   private cors_config = {};
   private bodyParserConfigJson = {};
   private bodyParserConfigUrl = {};
-  private key = "";
-  private nexuRouter = new NexuRouter(this.key).getRouter();
+  private nexuRouter = new NexuRouter().getRouter();
   private port: number;
   private Config = readConfig();
   constructor() {
@@ -32,7 +30,6 @@ class App {
     this.app.use(express.json());
     this.loadEnv();
     this.port = this.Config?.port || 5000;
-    this.key = this.Config?.key || nexuKeys.router;
     this.cors_config = this.Config?.corsConfig || {};
     this.bodyParserConfigJson = this.Config?.parserConfig?.json || {};
     this.bodyParserConfigUrl = this.Config?.parserConfig?.url || {};
@@ -80,9 +77,7 @@ class App {
 
     // Apply CSP policy
 
-    if (!this.Config?.disableHelmet) {
-      this.app.use(helmet(configOptions));
-    }
+    this.app.use(helmet(configOptions));
   }
 
   private registerStaticFiles(): void {

@@ -15,7 +15,7 @@ const externalDeps = [
   "commander",
   "concurrently",
   "cors",
-  "crypto-js",
+  "node-rsa",
   "helmet",
   "express",
   "body-parser",
