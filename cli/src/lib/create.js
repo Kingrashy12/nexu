@@ -9,6 +9,7 @@ class CreateApp {
   projectName = "";
   selectedDb = "";
   selectedLang = "";
+  initGit = true;
 
   async #askProjectName() {
     const project_name = await text({
@@ -43,6 +44,17 @@ class CreateApp {
     this.selectedLang = lang_options;
   }
 
+  async #askGitInit() {
+    const git = await select({
+      message: "Would you like to initialize a git repo",
+      options: [
+        { value: true, label: "Yes", hint: "Default" },
+        { value: false, label: "No" },
+      ],
+    });
+    this.initGit = git;
+  }
+
   async #handleDir() {
     await createRootPath(this.projectName);
     await createDir(this.projectName, this.selectedDb);
@@ -74,9 +86,20 @@ ${chalk.greenBright(name && `\cd ${this.projectName} && `)}npm run dev
       process.exit(0);
     }
 
+    await this.#askGitInit();
+    if (isCancel(this.selectedDb)) {
+      cancel("Process closed: Git init was cancelled.");
+      process.exit(0);
+    }
+
     await this.#handleDir();
 
-    await handleFiles(this.selectedLang, this.selectedDb, this.projectName);
+    await handleFiles(
+      this.selectedLang,
+      this.selectedDb,
+      this.projectName,
+      this.initGit
+    );
 
     logger.success(
       chalk.green(`\nProject "${this.projectName}" created successfully 🎉`)

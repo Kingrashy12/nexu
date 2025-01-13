@@ -40,9 +40,3 @@ export const createFile = async (name, content) => {
     logger.warning(err);
   }
 };
-
-// const createDir = (path) => {
-//   const dir = path.join(path);
-
-//   for (let i = 0; i < fileDir.length; i++) {}
-// };

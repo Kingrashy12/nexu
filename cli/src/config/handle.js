@@ -6,6 +6,7 @@ import {
   mainFile,
   nexuConfig,
   nodemonFile,
+  readmeFile,
   tsconfigFile,
 } from "../../boilerplate/files/files.js";
 import { getPkg } from "../../boilerplate/pkg/main.js";
@@ -16,6 +17,7 @@ import { selected } from "./select.js";
 import chalk from "chalk";
 import { installPkg } from "./deps.js";
 import { execSync } from "child_process";
+import path from "path";
 
 export const Files = (appName) => {
   const name = appName === "./" ? "nexu-server" : appName;
@@ -60,7 +62,7 @@ const handlePkg = (pkg, attr) => {
   return pk;
 };
 
-export const handleFiles = async (isTs, db, appName) => {
+export const handleFiles = async (isTs, db, appName, git) => {
   const files = Files(appName);
   const isMongo = db === selected.db[1];
   const isPostgres = db === selected.db[0];
@@ -93,7 +95,7 @@ export const handleFiles = async (isTs, db, appName) => {
         break;
     }
   }
-  await addFiles(isTs, appName, db);
+  await addFiles(isTs, appName, db, git);
 };
 
 const createPkgFile = async (appName, content) => {
@@ -154,13 +156,14 @@ const createFiles = async (isTs, appName) => {
   await createFile(`${appName}/server${ext}`, mainFile);
   await createFile(`${appName}/.gitignore`, gitignore);
   await createFile(`${appName}/nexu.config${ext}`, nexuConfig);
+  await createFile(`${appName}/README.md`, readmeFile);
   if (ext === ".ts") {
     await createFile(`${appName}/nodemon.json`, nodemonFile);
     await createFile(`${appName}/tsconfig.json`, tsconfigFile);
   }
 };
 
-const addFiles = async (isTs, appName, db) => {
+const addFiles = async (isTs, appName, db, git) => {
   const ext = isTs === "yes" ? ".ts" : ".js";
   const files = [
     `routes/hello${ext}`,
@@ -168,6 +171,7 @@ const addFiles = async (isTs, appName, db) => {
     "package.json",
     ".gitignore",
     `nexu.config${ext}`,
+    "README.md",
   ];
   const mongoclient = `config/mongoClient${ext}`;
   const pgclient = `config/postgresClient${ext}`;
@@ -191,9 +195,26 @@ const addFiles = async (isTs, appName, db) => {
       log.message(chalk.blueBright(`/${file}`));
     }
     log.success(chalk.greenBright("Project created successfully!"));
-    execSync("git init", { stdio: "ignore" });
+    if (git) {
+      await initializeRepo(appName);
+    }
     await installPkg(appName);
   } catch (error) {
     logger.error(error);
+  }
+};
+
+const initializeRepo = async (appName) => {
+  try {
+    if (appName !== "./") {
+      // Initialize Git in the specified directory
+      execSync(`cd ${path.resolve(appName)} && git init`, { stdio: "ignore" });
+    } else {
+      // Initialize Git in the current directory
+      execSync(`git init`, { stdio: "ignore" });
+    }
+    logger.success("Git repository initialized successfully.");
+  } catch (error) {
+    logger.error("Error initializing Git repository:", error.message);
   }
 };

@@ -21,7 +21,7 @@ const installPkg = async (appName) => {
   } catch (error) {
     // Handle errors if npm install fails
     logger.error(`Error during npm install: ${error.message}`);
-    return;
+    process.exit(1);
   }
 
   // Log and start updating the dependencies using CLI command
@@ -38,6 +38,7 @@ const installPkg = async (appName) => {
   } catch (error) {
     // Handle errors if the update-deps CLI command fails
     logger.error(`Error during update-deps: ${error.message}`);
+    process.exit(1);
   }
 };
 

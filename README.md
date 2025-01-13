@@ -6,8 +6,8 @@
 
 ## Repositories
 
-- **[Nexu](./packages/nexujs/README.md)**: Learn more about the core library and its features.
-- **[Nexu-Client](./packages/nexujs-client/README.md)**: Understand how to integrate encrypted communication into your frontend applications.
+- **[NexuJs](./packages/nexujs/README.md)**: Learn more about the core library and its features.
+- **[NexuJs-Client](./packages/nexujs-client/README.md)**: Understand how to integrate encrypted communication into your frontend applications.
 - **[NexuJs CLI](./cli/README.md)**: Explore the CLI tool for creating and managing NexuJs projects.
 
 ---
