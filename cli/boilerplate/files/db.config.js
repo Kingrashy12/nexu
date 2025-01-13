@@ -1,16 +1,24 @@
-const key = crypto.randomUUID();
+import NodeRSA from "node-rsa";
+
+const key = new NodeRSA({ b: 1024 });
+
+const public_key = key.exportKey("public");
+const private_key = key.exportKey("private");
 
 export const envFile = () => {
-  const pg = `NEXU_KEY=${key}
+  const pg = `NEXU_PUBLIC_KEY="${public_key}"
+NEXU_PRIVATE_KEY="${private_key}"
 PG_USER=YourUserName
 PG_DB=YourDatabase
 PG_PASS=YourPassword
 PG_HOST=YourHost`;
 
-  const mongo = `NEXU_KEY=${key}
+  const mongo = `NEXU_PUBLIC_KEY="${public_key}"
+NEXU_PRIVATE_KEY="${private_key}"
 DB_STRING=Your Connection String`;
 
-  const main = `NEXU_KEY=${key}`;
+  const main = `NEXU_PUBLIC_KEY="${public_key}"
+NEXU_PRIVATE_KEY="${private_key}"`;
 
   return { pg, mongo, main };
 };
