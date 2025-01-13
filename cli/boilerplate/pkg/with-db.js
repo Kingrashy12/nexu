@@ -8,7 +8,8 @@ export const getPkgWithDB = (appName) => {
   "private": "true",
   "scripts": {
     "start": "nexujs start",
-    "dev": "nexujs dev"
+    "dev": "nexujs dev",
+    "update": "nexujs-cli update-deps"
   },
   "keywords": [],
   "author": "",
@@ -32,7 +33,8 @@ export const getPkgWithDB = (appName) => {
     "build": "tsc",
     "start": "nexujs start",
     "dev": "nexujs dev:ts",
-    "serve": "tsc && node dist/server.js"
+    "serve": "tsc && node dist/server.js",
+    "update": "nexujs-cli update-deps"
   },
   "keywords": [],
   "author": "",
@@ -60,7 +62,8 @@ export const getPkgWithDB = (appName) => {
   "private": "true",
   "scripts": {
     "start": "nexujs start",
-    "dev": "nexujs dev"
+    "dev": "nexujs dev",
+    "update": "nexujs-cli update-deps"
   },
   "keywords": [],
   "author": "",
@@ -84,7 +87,8 @@ export const getPkgWithDB = (appName) => {
     "build": "tsc",
     "start": "nexujs start",
     "dev": "nexujs dev:ts",
-    "serve": "tsc && node dist/server.js"
+    "serve": "tsc && node dist/server.js",
+    "update": "nexujs-cli update-deps"
   },
   "keywords": [],
   "author": "",
