@@ -39,7 +39,11 @@ const decryptResponse = (encryptedData: string) => {
 };
 
 export const encryptPayload = (data: unknown) => {
-  const nexu = CryptoJS.AES.encrypt(JSON.stringify(data), getKey()).toString();
+  const key = getKey();
+  if (!key) {
+    throw new Error("Secret key not found");
+  }
+  const nexu = CryptoJS.AES.encrypt(JSON.stringify(data), key).toString();
   return { nexu };
 };
 

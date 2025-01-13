@@ -7,14 +7,13 @@ import { NexuMiddleware, NexuNext, NexuRequest, NexuResponse } from "../types";
 import NexuRouter from "./router";
 import { nexuKeys } from "./keys";
 import cors from "cors";
-import { readConfig } from "../utils/config";
-import CryptoJS from "crypto-js";
 import bodyParser from "body-parser";
 import https from "https";
 import http from "http";
 import fs, { existsSync } from "fs";
 import path from "path";
 import helmet from "helmet";
+import { readConfig } from "../utils/config";
 
 class App {
   app: Application;
@@ -38,8 +37,8 @@ class App {
     this.bodyParserConfigJson = this.Config?.parserConfig?.json || {};
     this.bodyParserConfigUrl = this.Config?.parserConfig?.url || {};
     this.registerStaticFiles();
-    this.useFileBasedRouting();
     this.useConfig();
+    this.useFileBasedRouting();
     routes.delete();
     this.start();
   }
@@ -129,19 +128,19 @@ class App {
   }
 
   private registerRoutes() {
-    const Config = readConfig();
-    this.cors_config = Config?.corsConfig || {};
-    this.bodyParserConfigJson = Config?.parserConfig?.json || {};
-    this.bodyParserConfigUrl = Config?.parserConfig?.url || {};
+    // const Config = readConfig();
+    // this.cors_config = Config?.corsConfig || {};
+    // this.bodyParserConfigJson = Config?.parserConfig?.json || {};
+    // this.bodyParserConfigUrl = Config?.parserConfig?.url || {};
 
-    this.useConfig();
+    // this.useConfig();
 
     const { routesName, routesPath } = routes;
 
     routesName.forEach((routeName, index) => {
       const routePath = routesPath[index];
       const routeURL = pathToFileURL(routePath).href;
-      const addon = Config?.addonPrefix;
+      const addon = this.Config?.addonPrefix;
       const path = addon ? `/${addon}/${routeName}` : `/${routeName}`;
 
       this.app.use(
@@ -171,7 +170,7 @@ class App {
     });
   }
 
-  startHttps(key: string, cert: string, port: number) {
+  private startHttps(key: string, cert: string, port: number) {
     // Start HTTP server for redirecting HTTP to HTTPS
     const httpServer = http.createServer((req, res) => {
       // Use Express for the response handling
