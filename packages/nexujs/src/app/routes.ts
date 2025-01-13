@@ -35,7 +35,7 @@ class Route {
   }
 
   delete() {
-    const tsConfig = path.join(process.cwd(), "/tsconfig.json");
+    const tsConfig = path.join(process.cwd(), "tsconfig.json");
     const isTs = existsSync(tsConfig);
 
     const cwd = process.cwd();
@@ -54,8 +54,12 @@ class Route {
 
         // Check if the file is not in the main routes and exists in dist/routes
         if (existsSync(fullPath) && !this.routesName.includes(routeName)) {
-          unlinkSync(fullPath);
-          console.log(`Deleted: ${fullPath}`);
+          try {
+            unlinkSync(fullPath);
+            logger.success(`Deleted: ${fullPath}`);
+          } catch (error) {
+            logger.error(`Failed to delete ${fullPath}:`, error);
+          }
         }
       }
     }

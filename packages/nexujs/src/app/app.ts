@@ -40,6 +40,7 @@ class App {
     this.registerStaticFiles();
     this.useFileBasedRouting();
     this.useConfig();
+    routes.delete();
     this.start();
   }
 
