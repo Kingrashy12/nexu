@@ -4,9 +4,11 @@ import { execSync } from "child_process";
 import fs from "fs";
 import path from "path";
 import { logger } from "../logger.js";
+import ora from "ora";
 
 export const updateBatch = () => {
   const projectDir = process.cwd();
+  const spinner = ora();
 
   try {
     const packageJsonPath = path.join(projectDir, "package.json");
@@ -25,17 +27,20 @@ export const updateBatch = () => {
 
     // Combine all dependencies
     const allDeps = [...deps, ...devDeps];
-
     // Install the latest version for each dependency
     allDeps.forEach((dep) => {
-      logger.message(`Updating ${dep} to latest...`);
-      execSync(`npm install ${dep}@latest`, {
-        stdio: "inherit",
-        cwd: projectDir,
-      });
-    });
+      spinner.start(`Updating ${dep} to latest...`);
 
-    logger.success("All dependencies updated to their latest versions!");
+      try {
+        execSync(`npm install ${dep}@latest`, {
+          stdio: "ignore",
+          cwd: projectDir,
+        });
+        spinner.succeed(`${dep} updated to latest.`);
+      } catch (error) {
+        spinner.fail(`Failed to update ${dep}: ${error.message}`);
+      }
+    });
   } catch (error) {
     logger.error("Failed to update dependencies:", error.message);
   }

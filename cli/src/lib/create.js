@@ -1,5 +1,5 @@
 import { cancel, isCancel, log, select, text } from "@clack/prompts";
-import { createPath, folders } from "../config/file.js";
+import { createPath, createRootPath, folders } from "../config/file.js";
 import chalk from "chalk";
 import { handleFiles } from "../config/handle.js";
 import { logger } from "../logger.js";
@@ -25,6 +25,7 @@ class CreateApp {
       options: [
         { value: "mongodb", label: "MongoDB" },
         { value: "postgresql", label: "PostgreSQL" },
+        { value: "neon", label: "Neon", hint: "Soon" },
         { value: "others", label: "Others" },
       ],
     });
@@ -43,7 +44,7 @@ class CreateApp {
   }
 
   async #handleDir() {
-    await createPath(this.projectName);
+    await createRootPath(this.projectName);
     await createDir(this.projectName, this.selectedDb);
   }
 
@@ -78,7 +79,7 @@ ${chalk.greenBright(name && `\cd ${this.projectName} && `)}npm run dev
     await handleFiles(this.selectedLang, this.selectedDb, this.projectName);
 
     logger.success(
-      chalk.green(`\Project "${this.projectName}" created successfully 🎉`)
+      chalk.green(`\nProject "${this.projectName}" created successfully 🎉`)
     );
     const name = this.projectName !== "./" ? this.projectName : "";
     this.#success(name);

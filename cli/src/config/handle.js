@@ -189,7 +189,7 @@ const addFiles = async (isTs, appName, db) => {
       log.message(chalk.blueBright(`/${file}`));
     }
     log.success(chalk.greenBright("Project created successfully!"));
-    execSync("git init", { stdio: "inherit" });
+    execSync("git init", { stdio: "ignore" });
     await installPkg(appName);
   } catch (error) {
     logger.error(error);

@@ -1,16 +1,33 @@
 import fs from "fs";
 import { logger } from "../logger.js";
+import path from "path";
 
 export const folders = ["controller", "routes", "middleware", "model"];
+
+export const createRootPath = async (folderName) => {
+  const resolvedPath = path.resolve(folderName);
+
+  try {
+    if (!fs.existsSync(resolvedPath)) {
+      fs.mkdirSync(folderName);
+    } else if (folderName !== "./") {
+      logger.error(
+        `\nThe path '${folderName}' already exists. No action was taken.`
+      );
+      process.exit(1);
+    }
+  } catch (err) {
+    logger.error(err.message);
+  }
+};
 
 export const createPath = async (folderName) => {
   try {
     if (!fs.existsSync(folderName)) {
       fs.mkdirSync(folderName);
-      //   logger.info(`- Folder created: ${folderName}`);
     }
   } catch (err) {
-    logger.error(err);
+    logger.error(err.message);
   }
 };
 
