@@ -15,4 +15,7 @@ export interface UserConfig {
     timeOut: number;
     accessToken: string;
   };
+  dev?: {
+    disablePayloadEncrytion?: boolean;
+  };
 }
