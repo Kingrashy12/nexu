@@ -19,6 +19,7 @@ const externalDeps = [
   "helmet",
   "express",
   "body-parser",
+  "node-forge",
 ];
 
 export default [

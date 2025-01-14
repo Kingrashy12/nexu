@@ -39,8 +39,8 @@ class NexuRouter {
   }
 
   private decryptData(data: string) {
-    const decrypted = decrypt(data);
-    const body = JSON.parse(decrypted);
+    const body = decrypt(data);
+    // const body = JSON.parse(decrypted);
     return body;
   }
 

@@ -1,4 +1,4 @@
-import NodeRSA from "node-rsa";
+import forge from "node-forge";
 import { readConfig } from "../utils/config";
 
 export const secure = () => {
@@ -10,21 +10,29 @@ export const secure = () => {
     throw new Error("Keys are not set. Please set them using nexu.config");
   }
 
-  const private_ = new NodeRSA(private_key);
-  const public_ = new NodeRSA(public_key);
+  const publicKey = forge.pki.publicKeyFromPem(public_key);
+  const privateKey = forge.pki.privateKeyFromPem(private_key);
 
   return {
-    private_,
-    public_,
+    publicKey,
+    privateKey,
   };
 };
 
-const encrypt = (data: any) => {
-  return secure().public_.encrypt(data, "base64");
-};
+function encrypt(data: unknown) {
+  const jsonString = JSON.stringify(data);
+  const encrypted = secure().publicKey.encrypt(jsonString, "RSA-OAEP", {
+    md: forge.md.sha256.create(),
+  });
+  return forge.util.encode64(encrypted);
+}
 
-const decrypt = (data: string) => {
-  return secure().private_.decrypt(data, "utf8");
-};
+function decrypt(encryptedData: string) {
+  const encryptedBytes = forge.util.decode64(encryptedData);
+  const decrypted = secure().privateKey.decrypt(encryptedBytes, "RSA-OAEP", {
+    md: forge.md.sha256.create(),
+  });
+  return JSON.parse(decrypted);
+}
 
 export { encrypt, decrypt };
