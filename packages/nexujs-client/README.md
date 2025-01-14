@@ -2,26 +2,42 @@
 
 ## Table of Contents
 
+- [Introduction](#introduction)
 - [Features](#features)
 - [Installation](#installation)
 - [Getting Started](#getting-started)
-  - [Example Configuration](#example-configuration-nexujsconfigjs)
+  - [Setup Client](#setup-client)
   - [Set Key](#set-key)
   - [Example Usage](#example-usage)
 - [Methods](#methods)
+  - [Post](#posturl-data-config)
+  - [Get](#geturl-config)
+  - [Put](#puturl-data-config)
+  - [Patch](#patchurl-data-config)
+  - [Delete](#deleteurl-config)
+  - [createApiClient](#createapiclient)
 - [License](#license)
 
+---
+
+## Introduction
+
 **NexuJS-Client** is a lightweight and secure HTTP client library designed to work seamlessly with the Nexu backend library. It handles encrypted communication between the frontend and backend, ensuring your data remains secure.
+
+---
 
 ## Features
 
 - **Built-in Encryption/Decryption**: Automatically encrypts requests and decrypts responses to ensure secure communication.
 - **Extended Axios Methods**: Provides `get`, `post`, `put`, `delete`, and `patch` methods, extended with built-in encryption.
 - **Lightweight and Easy to Use**: A simple API to integrate secure communication in your frontend applications.
+- **Customizable Axios Interceptors**: Supports configuring request and response interceptors using `createApiClient`.
+
+---
 
 ## Installation
 
-To install NexuJS-Client, use the following command:
+Install NexuJS-Client using npm:
 
 ```bash
 npm install nexujs-client
@@ -29,43 +45,58 @@ npm install nexujs-client
 
 ## Getting Started
 
-First, ensure you have set up the `nexujs` backend library and a shared secret key in `nexujs.config.js`.
+To get started, ensure you have set up the `nexu.client` configuration in your project.
 
-### Example Configuration (`nexujs.config.js`):
+### Setup Client
+
+Run the following command to generate a basic `nexu.client` configuration file:
+
+```bash
+npx md-config
+```
+
+This will create a `constants/nexu.client.js` file in your project directory.
+
+### Example `nexu.client.js`
 
 ```js
-export default defineConfig({
-  key: process.env.NEXU_KEY,
+import { NexuClient } from "nexujs-client";
+
+const publicKey = String("your_publicKey");
+const privateKey = String("your_privateKey");
+
+const client = new NexuClient({
+  privateKey,
+  publicKey,
 });
+
+export default client;
 ```
 
 ### Set Key
 
-To ensure secure communication between your frontend and backend, you must use the same key defined during your NexuJS server setup. This key should be stored in the `.env` file of your project based on the framework you are using.
+To ensure secure communication, use the same encryption keys that were set during the NexuJS server setup. These keys should be stored in environment variables (`.env`) for security.
 
-Add the following key to your `.env` file:
-
-- **For Vite**: `VITE_NEXU_KEY`
-
-- **For React**: `NEXU_KEY`
-
-- **For Next.js**: `NEXT_PUBLIC_NEXU_KEY`
-
-This ensures that both the client and server share the same encryption key for secure communication.
+```env
+PUBLIC_KEY=your_public_key
+PRIVATE_KEY=your_private_key
+```
 
 ### Example Usage:
 
+Here’s an example of using the Post method for making a login request:
+
 ```js
-import { Post } from "nexujs-client";
+import client from "../constants/nexu.client";
 
 const login = async () => {
   try {
-    const response = await Post("http://localhost:8000/auth/login", {
+    const response = await client.Post("http://localhost:8000/auth/login", {
       email: "user@example.com",
       password: "password123",
     });
 
-    console.log("Decrypted Response:", response);
+    console.log(response);
   } catch (error) {
     console.error("Error:", error);
   }
@@ -96,6 +127,10 @@ const login = async () => {
 - **url**: The endpoint to which the request will be sent.
 - **data**: The request body (object).
 - **config**: Optional Axios configuration object.
+
+### createApiClient
+
+The `createApiClient` function is a utility for setting up Axios interceptors. It allows you to add custom request and response interceptors to handle encryption and decryption automatically.
 
 ## License
 
