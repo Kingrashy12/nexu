@@ -64,7 +64,10 @@ import { defineConfig } from "nexujs";
 
 export default defineConfig({
   port: 8080,
-  key: process.env.NEXU_KEY,
+  keys: {
+    public: process.env.NEXU_PUBLIC_KEY,
+    private: process.env.NEXU_PRIVATE_KEY,
+  },
   corsConfig: {
     origin: "yourorigin.com",
   },
@@ -89,10 +92,10 @@ export default defineConfig({
 - **Request Encryption**: Incoming requests are encrypted using a shared secret key defined in the key configuration.
 - **Response Encryption**: Outgoing server responses are also encrypted with the same shared key, ensuring end-to-end secure communication.
 
-> Important: The same `NEXU_KEY` used in your backend `.env` file must also be added to your client's `.env`
+> Important: The same `NEXU_PUBLIC_KEY` and `NEXU_PRIVATE_KEY` used in your backend `.env` file must also be used in your client's side
 > file to enable seamless encryption and decryption of requests and responses.
 
-For information on setting up the client-side encryption key, refer to the [nexujs-client README](../client/README.md#set-key).
+For information on setting up the client-side encryption key, refer to the [nexujs-client README](../nexujs-client/README.md#set-key).
 
 ### Configuration API
 
@@ -101,7 +104,10 @@ The **Configuration API** allows you to define key settings for your Nexu applic
 ```ts
 {
   port: number;
-  key: string;
+  keys: {
+    public: string;
+    private: string;
+  };
   corsConfig?: CorsOptions;
   parserConfig?: {
     json?: OptionsJson;
