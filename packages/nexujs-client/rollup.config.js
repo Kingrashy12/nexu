@@ -9,11 +9,18 @@ import PeerDepsExternalPlugin from "rollup-plugin-peer-deps-external";
 
 export default {
   input: "src/index.ts",
-  output: {
-    file: "dist/index.js",
-    format: "es",
-    sourcemap: false,
-  },
+  output: [
+    {
+      file: "dist/index.js",
+      format: "es",
+      sourcemap: false,
+    },
+    {
+      file: "dist/index.cjs",
+      format: "cjs",
+      sourcemap: false,
+    },
+  ],
   plugins: [
     del({ targets: "dist/*" }),
     resolve(),
@@ -24,5 +31,5 @@ export default {
     esbuild({ minify: true }),
     visualizer({ open: true }),
   ],
-  external: ["axios", "path", "crypto-js"],
+  external: ["axios", "path", "node-forge", "dotenv/config", "dotenv"],
 };
