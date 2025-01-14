@@ -1,22 +1,26 @@
 import { AxiosResponse } from "axios";
 import { decrypt, encrypt } from "./utils/encrypt";
+import { Keys } from "./types";
 
 // Function to decrypt the response
-const decryptResponse = (encryptedData: string) => {
-  const body = decrypt(encryptedData);
+const decryptResponse = (encryptedData: string, key: Keys) => {
+  const body = decrypt(encryptedData, key);
   return body;
 };
 
-export const encryptPayload = (data: unknown) => {
-  const nexu = encrypt(data);
+export const encryptPayload = (data: unknown, key: Keys) => {
+  const nexu = encrypt(data, key);
   return { nexu };
 };
 
 // Helper function to decrypt the response
-const handleDecryptedResponse = <T = unknown>(response: AxiosResponse): T => {
+const handleDecryptedResponse = <T = unknown>(
+  response: AxiosResponse,
+  key: Keys
+): T => {
   // Check if the response contains an encrypted payload
   if (response.data && response.data.nexu) {
-    return decryptResponse(response.data.nexu);
+    return decryptResponse(response.data.nexu, key);
   }
 
   // If no encryption, return the raw data

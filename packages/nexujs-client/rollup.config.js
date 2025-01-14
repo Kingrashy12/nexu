@@ -2,10 +2,10 @@ import commonjs from "@rollup/plugin-commonjs";
 import resolve from "@rollup/plugin-node-resolve";
 import json from "@rollup/plugin-json";
 import typescript from "@rollup/plugin-typescript";
-import esbuild from "rollup-plugin-esbuild";
 import { visualizer } from "rollup-plugin-visualizer";
 import del from "rollup-plugin-delete";
 import PeerDepsExternalPlugin from "rollup-plugin-peer-deps-external";
+import esbuild from "rollup-plugin-esbuild";
 
 export default {
   input: "src/index.ts",
@@ -23,13 +23,13 @@ export default {
   ],
   plugins: [
     del({ targets: "dist/*" }),
-    resolve(),
+    resolve({ browser: true }),
     PeerDepsExternalPlugin(),
     commonjs(),
     json(),
     typescript({ tsconfig: "./tsconfig.json" }),
     esbuild({ minify: true }),
-    visualizer({ open: true }),
+    visualizer({ open: false }),
   ],
-  external: ["axios", "path", "node-forge", "dotenv/config", "dotenv"],
+  external: ["axios", "node-forge"],
 };

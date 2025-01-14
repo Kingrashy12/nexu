@@ -1,13 +1,15 @@
 import handleDecryptedResponse from "../gate";
 import getInterceptor from "../interceptor";
+import { Keys, UserConfig } from "../types";
 
-const createApiClient = () => {
-  const axiosInstance = getInterceptor();
+const createApiClient = (Config: UserConfig) => {
+  const axiosInstance = getInterceptor(Config);
 
   // Wrapper for making requests
   const request = async <T = unknown>(
     method: "get" | "post" | "put" | "patch" | "delete",
     url: string,
+    key: Keys,
     data?: unknown,
     config?: any
   ): Promise<T> => {
@@ -19,7 +21,7 @@ const createApiClient = () => {
         ...config,
       });
 
-      return handleDecryptedResponse(response);
+      return handleDecryptedResponse(response, key);
     } catch (error) {
       console.error("API Request Error:", error);
       throw error;
@@ -27,16 +29,20 @@ const createApiClient = () => {
   };
 
   return {
-    get: <T = unknown>(url: string, config?: any) =>
-      request<T>("get", url, undefined, config),
-    post: <T = unknown>(url: string, data?: unknown, config?: any) =>
-      request<T>("post", url, data, config),
-    put: <T = unknown>(url: string, data?: unknown, config?: any) =>
-      request<T>("put", url, data, config),
-    patch: <T = unknown>(url: string, data?: unknown, config?: any) =>
-      request<T>("patch", url, data, config),
-    delete: <T = unknown>(url: string, config?: any) =>
-      request<T>("delete", url, undefined, config),
+    get: <T = unknown>(url: string, key: Keys, config?: any) =>
+      request<T>("get", url, key, config),
+    post: <T = unknown>(url: string, key: Keys, data?: unknown, config?: any) =>
+      request<T>("post", url, key, data, config),
+    put: <T = unknown>(url: string, key: Keys, data?: unknown, config?: any) =>
+      request<T>("put", url, key, data, config),
+    patch: <T = unknown>(
+      url: string,
+      key: Keys,
+      data?: unknown,
+      config?: any
+    ) => request<T>("patch", url, key, data, config),
+    delete: <T = unknown>(url: string, key: Keys, config?: any) =>
+      request<T>("delete", url, key, config),
   };
 };
 

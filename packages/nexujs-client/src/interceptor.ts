@@ -3,7 +3,7 @@ import axios, {
   AxiosInstance,
   InternalAxiosRequestConfig,
 } from "axios";
-import { readConfig } from "./utils/readConfig";
+import { UserConfig } from "./types";
 
 let isRefreshing = false;
 let subscribers: Array<(token: string) => void> = [];
@@ -17,21 +17,11 @@ const addSubscriber = (callback: (token: string) => void) => {
   subscribers.push(callback);
 };
 
-const refreshAccessToken = async (): Promise<string> => {
-  // Replace this with your actual token refresh logic
-  return Promise.resolve("newAccessToken");
+const refreshAccessToken = async (accessTkn: string | any): Promise<string> => {
+  return Promise.resolve(accessTkn);
 };
 
-const getInterceptor = (): AxiosInstance => {
-  const Config = readConfig();
-
-  // Ensure that if `useInterceptors` is enabled, `interceptors` is defined
-  if (Config?.useInterceptors && !Config?.interceptors) {
-    throw new Error(
-      "Configuration Error: `useInterceptors` is enabled, but no `interceptors` configuration is provided."
-    );
-  }
-
+const getInterceptor = (Config: UserConfig): AxiosInstance => {
   if (Config?.useInterceptors && Config.interceptors) {
     const axiosInstance = axios.create({
       baseURL: Config.interceptors.baseUrl,
@@ -51,7 +41,6 @@ const getInterceptor = (): AxiosInstance => {
           config.headers.Authorization = `Bearer ${accessToken}`;
         }
 
-        console.log("Request Interceptor Config:", config);
         return config;
       },
       (error) => {
@@ -62,7 +51,6 @@ const getInterceptor = (): AxiosInstance => {
 
     axiosInstance.interceptors.response.use(
       (response: AxiosResponse) => {
-        console.log("Response Interceptor:", response);
         return response;
       },
       async (error) => {
@@ -73,7 +61,9 @@ const getInterceptor = (): AxiosInstance => {
             isRefreshing = true;
 
             try {
-              const refreshedToken = await refreshAccessToken();
+              const refreshedToken = await refreshAccessToken(
+                Config.interceptors?.accessToken
+              );
               localStorage.setItem(accessTkn, refreshedToken);
               onTokenRefreshed(refreshedToken);
             } catch (refreshError) {

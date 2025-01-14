@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import { AxiosError, AxiosRequestConfig } from "axios";
 
 export type Error = AxiosError & { error: string };
 
@@ -15,7 +15,26 @@ export interface UserConfig {
     timeOut: number;
     accessToken: string;
   };
-  dev?: {
-    disablePayloadEncrytion?: boolean;
-  };
 }
+
+export type SendRequest = {
+  url: string;
+  data?: unknown;
+  config?: AxiosRequestConfig;
+};
+
+export type Response = {
+  url: string;
+  config?: AxiosRequestConfig;
+};
+
+export type Keys = {
+  public_key: string;
+  private_key: string;
+};
+
+export type ApiClient = {
+  url: string;
+  data?: unknown;
+  config?: AxiosRequestConfig;
+};
