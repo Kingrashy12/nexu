@@ -91,9 +91,12 @@ import client from "../constants/nexu.client";
 
 const login = async () => {
   try {
-    const response = await client.Post("http://localhost:8000/auth/login", {
-      email: "user@example.com",
-      password: "password123",
+    const response = await client.Post({
+      url: "http://localhost:8000/auth/login",
+      data: {
+        email: "user@example.com",
+        password: "password123",
+      },
     });
 
     console.log(response);
@@ -131,6 +134,42 @@ const login = async () => {
 ### createApiClient
 
 The `createApiClient` function is a utility for setting up Axios interceptors. It allows you to add custom request and response interceptors to handle encryption and decryption automatically.
+
+#### Example
+
+```js
+import { NexuClient } from "nexujs-client";
+
+const publicKey = String("your_publicKey");
+const privateKey = String("your_privateKey");
+
+const client = new NexuClient({
+  privateKey,
+  publicKey,
+});
+
+const apiClient = client.createApiClient({
+  baseURL: "http://localhost:8000",
+  onRequest: (config) => {
+    console.log("Request Interceptor:", config);
+    return config;
+  },
+  onResponse: (response) => {
+    console.log("Response Interceptor:", response);
+    return response;
+  },
+  onResponseError(error) {
+    console.log("Something went wrong", error.message);
+  },
+});
+
+export default apiClient;
+
+const fetchUsers = async () => {
+  const users = await apiClient.Get({ url: "/users" });
+  console.log(users);
+};
+```
 
 ## License
 

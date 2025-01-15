@@ -1,8 +1,8 @@
 import handleDecryptedResponse from "../gate";
 import getInterceptor from "../interceptor";
-import { Keys, UserConfig } from "../types";
+import { InterceptorConfig, Keys } from "../types";
 
-const createApiClient = (Config: UserConfig) => {
+const createApiClient = (Config: InterceptorConfig) => {
   const axiosInstance = getInterceptor(Config);
 
   // Wrapper for making requests

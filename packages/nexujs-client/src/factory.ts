@@ -1,13 +1,17 @@
 import { AxiosRequestConfig } from "axios";
 import { createApiClient, Delete, Get, Patch, Post, Put } from "./service";
-import { ApiClient, Error, Response, SendRequest, UserConfig } from "./types";
+import {
+  ApiClient,
+  Error,
+  InterceptorConfig,
+  Response,
+  SendRequest,
+} from "./types";
 import { getError } from "./hooks";
 
 type Constructor = {
   publicKey: string;
   privateKey: string;
-  useInterceptors?: boolean;
-  interceptors?: UserConfig["interceptors"];
 };
 
 /**
@@ -29,19 +33,10 @@ type Constructor = {
 class NexuClient {
   private public_key: string;
   private private_key: string;
-  private useInterceptors: boolean | undefined;
-  private interceptors: UserConfig["interceptors"];
 
-  constructor({
-    privateKey,
-    publicKey,
-    useInterceptors,
-    interceptors,
-  }: Constructor) {
+  constructor({ privateKey, publicKey }: Constructor) {
     this.private_key = privateKey;
     this.public_key = publicKey;
-    this.useInterceptors = useInterceptors;
-    this.interceptors = interceptors;
     this.checkConfig();
   }
 
@@ -127,13 +122,6 @@ class NexuClient {
   }
 
   private checkConfig() {
-    // Ensure that if `useInterceptors` is enabled, `interceptors` is defined
-    if (this.useInterceptors && !this.interceptors) {
-      throw new Error(
-        "Configuration Error: `useInterceptors` is enabled, but no `interceptors` configuration is provided."
-      );
-    }
-
     // Ensure that both `private_key` and `public_key` are defined
     if (!this.private_key || !this.public_key) {
       throw new Error(
@@ -151,16 +139,13 @@ class NexuClient {
    * @returns {Object} The methods (post, patch, put, get, delete) to make the respective API requests.
    *
    * @example
-   * const { post, patch, put, get, Delete } = client.createApiClient();
+   * const { post, patch, put, get, Delete } = client.createApiClient({ baseUrl: "https://api.example.com", });
    * const response = await post({ url: '/path/to/resource', data: { key: 'value' } }); // POST request
    */
-  createApiClient() {
-    const methods = createApiClient({
-      useInterceptors: this.useInterceptors,
-      interceptors: this.interceptors,
-    });
+  createApiClient(config: InterceptorConfig) {
+    const methods = createApiClient(config);
 
-    const post = <T = unknown>({ url, data, config }: ApiClient) =>
+    const Post = <T = unknown>({ url, data, config }: ApiClient) =>
       methods.post<T>(
         url,
         { private_key: this.private_key, public_key: this.public_key },
@@ -168,7 +153,7 @@ class NexuClient {
         config
       );
 
-    const patch = <T = unknown>({ url, data, config }: ApiClient) =>
+    const Patch = <T = unknown>({ url, data, config }: ApiClient) =>
       methods.patch<T>(
         url,
         { private_key: this.private_key, public_key: this.public_key },
@@ -176,7 +161,7 @@ class NexuClient {
         config
       );
 
-    const put = <T = unknown>({ url, data, config }: ApiClient) =>
+    const Put = <T = unknown>({ url, data, config }: ApiClient) =>
       methods.put<T>(
         url,
         { private_key: this.private_key, public_key: this.public_key },
@@ -184,7 +169,7 @@ class NexuClient {
         config
       );
 
-    const get = <T = unknown>({ url, config }: ApiClient) =>
+    const Get = <T = unknown>({ url, config }: ApiClient) =>
       methods.get<T>(
         url,
         { private_key: this.private_key, public_key: this.public_key },
@@ -198,7 +183,7 @@ class NexuClient {
         config
       );
 
-    return { post, patch, put, Delete, get };
+    return { Post, Patch, Put, Delete, Get };
   }
 
   /**

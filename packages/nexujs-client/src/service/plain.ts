@@ -2,7 +2,8 @@ import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
 import handleDecryptedResponse, { encryptPayload } from "../gate";
 import { Keys } from "../types";
 
-const encryptData = (data: unknown, key: Keys) => encryptPayload(data, key);
+export const encryptData = (data: unknown, key: Keys) =>
+  encryptPayload(data, key);
 
 const nexuClient = {
   async post<T = unknown>(

@@ -2,8 +2,9 @@ import axios, {
   AxiosResponse,
   AxiosInstance,
   InternalAxiosRequestConfig,
+  AxiosHeaders,
 } from "axios";
-import { UserConfig } from "./types";
+import { InterceptorConfig } from "./types";
 
 let isRefreshing = false;
 let subscribers: Array<(token: string) => void> = [];
@@ -17,83 +18,99 @@ const addSubscriber = (callback: (token: string) => void) => {
   subscribers.push(callback);
 };
 
-const refreshAccessToken = async (accessTkn: string | any): Promise<string> => {
-  return Promise.resolve(accessTkn);
-};
+const getInterceptor = (Config: InterceptorConfig): AxiosInstance => {
+  const axiosInstance = axios.create({
+    baseURL: Config.baseUrl,
+    timeout: Config.timeOut,
+    ...Config.axiosConfig,
+  });
 
-const getInterceptor = (Config: UserConfig): AxiosInstance => {
-  if (Config?.useInterceptors && Config.interceptors) {
-    const axiosInstance = axios.create({
-      baseURL: Config.interceptors.baseUrl,
-      timeout: Config.interceptors.timeOut,
-    });
-    const accessTkn = Config.interceptors.accessToken;
-    axiosInstance.interceptors.request.use(
-      (config: InternalAxiosRequestConfig) => {
-        config.headers = config.headers || {};
-
-        const accessToken =
-          Config.interceptors?.accessToken ||
-          localStorage.getItem(accessTkn) ||
-          "";
-
-        if (accessToken) {
-          config.headers.Authorization = `Bearer ${accessToken}`;
-        }
-
-        return config;
-      },
-      (error) => {
-        console.error("Request Interceptor Error:", error);
-        return Promise.reject(error);
+  // Request Interceptor
+  axiosInstance.interceptors.request.use(
+    async (config: InternalAxiosRequestConfig): Promise<any> => {
+      if (!config.headers) {
+        config.headers = new AxiosHeaders();
       }
-    );
 
-    axiosInstance.interceptors.response.use(
-      (response: AxiosResponse) => {
-        return response;
-      },
-      async (error) => {
-        console.error("Response Interceptor Error:", error);
+      const accessToken =
+        Config.getAccessToken?.() ||
+        localStorage.getItem(Config.accessTokenKey || "accessToken");
 
-        if (error.response?.status === 401) {
-          if (!isRefreshing) {
-            isRefreshing = true;
+      if (accessToken) {
+        config.headers.set("Authorization", `Bearer ${accessToken}`);
+      }
 
-            try {
-              const refreshedToken = await refreshAccessToken(
-                Config.interceptors?.accessToken
+      if (Config.onRequest) {
+        // Allow user-defined request handling
+        return await Config.onRequest(config);
+      }
+
+      return config;
+    },
+    (error) => {
+      console.error("Request Interceptor Error:", error);
+      if (Config.onRequestError) {
+        Config.onRequestError(error);
+      }
+      return Promise.reject(error);
+    }
+  );
+
+  // Response Interceptor
+  axiosInstance.interceptors.response.use(
+    async (response: AxiosResponse) => {
+      if (Config.onResponse) {
+        // Allow user-defined response handling
+        return await Config.onResponse(response);
+      }
+      return response;
+    },
+    async (error) => {
+      console.error("Response Interceptor Error:", error);
+
+      if (error.response?.status === 401) {
+        if (!isRefreshing) {
+          isRefreshing = true;
+
+          try {
+            const refreshedToken =
+              (Config.onTokenRefresh && (await Config.onTokenRefresh())) || "";
+
+            if (refreshedToken) {
+              localStorage.setItem(
+                Config.accessTokenKey || "accessToken",
+                refreshedToken
               );
-              localStorage.setItem(accessTkn, refreshedToken);
               onTokenRefreshed(refreshedToken);
-            } catch (refreshError) {
-              console.error("Token refresh failed:", refreshError);
-              return Promise.reject(refreshError);
-            } finally {
-              isRefreshing = false;
             }
+          } catch (refreshError) {
+            console.error("Token refresh failed:", refreshError);
+            if (Config.onTokenRefreshError) {
+              Config.onTokenRefreshError(refreshError);
+            }
+            return Promise.reject(refreshError);
+          } finally {
+            isRefreshing = false;
           }
-
-          return new Promise((resolve, reject) => {
-            addSubscriber((token) => {
-              error.config.headers.Authorization = `Bearer ${token}`;
-              resolve(axiosInstance.request(error.config));
-            });
-          });
         }
 
-        return Promise.reject(error);
+        return new Promise((resolve, reject) => {
+          addSubscriber((token) => {
+            error.config.headers.set("Authorization", `Bearer ${token}`);
+            resolve(axiosInstance.request(error.config));
+          });
+        });
       }
-    );
 
-    return axiosInstance;
-  } else {
-    console.warn(
-      "Interceptors are disabled in the configuration. Returning a default Axios instance."
-    );
+      if (Config.onResponseError) {
+        Config.onResponseError(error);
+      }
 
-    return axios.create();
-  }
+      return Promise.reject(error);
+    }
+  );
+
+  return axiosInstance;
 };
 
 export default getInterceptor;
