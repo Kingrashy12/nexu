@@ -10,6 +10,7 @@ class CreateApp {
   selectedDb = "";
   selectedLang = "";
   initGit = true;
+  useJest = false;
 
   async #askProjectName() {
     const project_name = await text({
@@ -55,6 +56,17 @@ class CreateApp {
     this.initGit = git;
   }
 
+  async #askJest() {
+    const jest = await select({
+      message: "Do you want to use Jest for testing?",
+      options: [
+        { value: true, label: "Yes", hint: "Soon" },
+        { value: false, label: "No" },
+      ],
+    });
+    this.useJest = jest;
+  }
+
   async #handleDir() {
     await createRootPath(this.projectName);
     await createDir(this.projectName, this.selectedDb);
@@ -89,6 +101,12 @@ ${chalk.greenBright(name && `\cd ${this.projectName} && `)}npm run dev
     await this.#askGitInit();
     if (isCancel(this.selectedDb)) {
       cancel("Process closed: Git init was cancelled.");
+      process.exit(0);
+    }
+
+    await this.#askJest();
+    if (isCancel(this.selectedDb)) {
+      cancel("Process jest: Git init was cancelled.");
       process.exit(0);
     }
 
