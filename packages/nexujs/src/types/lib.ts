@@ -39,6 +39,8 @@ export interface RequestWithLimit {
   query: PgQuery;
   whereClause?: string;
   values?: unknown[];
+  sortBy?: string | any;
+  order?: string | any;
 }
 
 export interface RequestLimitPg {
@@ -76,4 +78,19 @@ export interface RequestLimitPg {
    * @example [1, 'active'] or [status]
    */
   values?: unknown[];
+  /**
+   * Specifies the field by which to sort the data.
+   * This can be a string representing the field name or any other value.
+   *
+   * @type {string | any}
+   */
+  sortBy?: string | any;
+
+  /**
+   * Specifies the order of sorting (e.g., ascending or descending).
+   * This can be a string representing the order type or any other value.
+   *
+   * @type {string | any}
+   */
+  order?: "asc" | "desc";
 }

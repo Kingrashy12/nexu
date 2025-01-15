@@ -7,14 +7,26 @@ const useQueryLimit = async ({
   table,
   whereClause = "",
   values = [],
+  sortBy = "id",
+  order = "asc",
   query,
 }: RequestWithLimit) => {
-  // Destructure page and limit from req.query (default values provided)
-  const { page: queryPage, limit: queryLimit } = req.query;
+  // Destructure page, limit, sortBy, order from req.query (default values provided)
+  const {
+    page: queryPage,
+    limit: queryLimit,
+    sortBy: querySortBy,
+    order: queryOrder,
+  } = req.query;
 
   // Use query parameters if available, else fall back to defaults
   const Page = queryPage ? Number(queryPage) : page;
   const Limit = queryLimit ? Number(queryLimit) : limit;
+  const SortBy = querySortBy || sortBy;
+  const Order =
+    queryOrder && ["asc", "desc"].includes(queryOrder.toString().toLowerCase())
+      ? queryOrder
+      : order;
 
   // Validation to ensure valid page and limit
   if (Page < 1 || Limit < 1) {
@@ -27,16 +39,21 @@ const useQueryLimit = async ({
   // Create the base query string with the WHERE clause if present
   let queryString = `SELECT * FROM ${table}`;
 
+  // Add filtering conditions if whereClause is provided
   if (whereClause) {
     queryString += ` WHERE ${whereClause}`;
   }
 
+  // Add sorting condition
+  queryString += ` ORDER BY ${SortBy} ${Order.toString().toUpperCase()}`;
+
+  // Add pagination (LIMIT and OFFSET)
   queryString += ` LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
 
   // Combine existing values with the pagination parameters
   const queryValues = [...values, Limit, offset];
 
-  // Perform the query with pagination and filtering
+  // Perform the query with pagination, filtering, and sorting
   const results = await query(queryString, queryValues);
 
   return results;

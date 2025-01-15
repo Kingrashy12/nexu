@@ -33,6 +33,8 @@ class NexuPostgres {
     table,
     limit,
     page,
+    order,
+    sortBy,
   }: RequestLimitPg) {
     return useQueryLimit({
       req,
@@ -42,6 +44,8 @@ class NexuPostgres {
       query: this.query,
       limit,
       page,
+      order,
+      sortBy,
     });
   }
 }
