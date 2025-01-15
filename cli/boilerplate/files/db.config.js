@@ -24,22 +24,33 @@ NEXU_PRIVATE_KEY="${private_key}"`;
 };
 
 export const dbConfig = () => {
-  const pg = `import { Pool } from 'pg';
-import 'dotenv/config';
+  const pg = `import { Pool, QueryResult, QueryResultRow } from 'pg';
   
 const pool = new Pool({
   user: process.env.PG_USER.toString(),
   host: process.env.PG_HOST.toString(),
   database: process.env.PG_DB.toString(),
   password: process.env.PG_PASS.toString(),
-  port: 5432, // Adjust if using a non-default port
+  port: 5432,
 });
   
       
-export default pool`;
+export const query = async (
+  action: string,
+  values?: unknown[]
+): Promise<QueryResult<QueryResultRow> | undefined> => {
+  const client = await pool.connect();
+  try {
+    return await client.query(action, values);
+  } catch (error) {
+    throw new Error("Database query failed");
+  } finally {
+    client.release();
+  }
+};
+`;
 
   const mongo = `import mongoose from "mongoose";
-import 'dotenv/config';
   
 const DB_STRING = process.env.DB || "";
   
