@@ -6,7 +6,7 @@ import useQueryLimit from "./useQueryLimit";
  *
  * @example
  *
- * const postgres = new NexuPostgres(query) // The query should be imported from 'config/pg.client'
+ * const postgres = new NexuPostgres(query) // The query should be imported from 'config/postgresClient'
  */
 class NexuPostgres {
   private query: PgQuery;
