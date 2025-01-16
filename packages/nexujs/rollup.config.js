@@ -20,6 +20,7 @@ const externalDeps = [
   "express",
   "body-parser",
   "node-forge",
+  "express-rate-limit",
 ];
 
 export default [

@@ -7,6 +7,7 @@
 - [Configuration](#configuration)
   - [Configuration API](#configuration-api)
   - [Helmet Configuration](#helmet-configuration)
+  - [Rate Limiting Configuration](#rate-limiting-configuration)
 - [Experimental Features](#experimental-features)
   - [File-Based Routing](#file-based-routing)
     - [File structure](#file-structure)
@@ -15,7 +16,7 @@
 - [Related Packages](#related-packages)
 - [License](#license)
 
-**Nexu** is a scalable backend library built on top of Express.js, featuring encrypted requests, middleware support, and seamless integration for modern web applications.
+**Nexu** is a scalable backend library built on top of Express.js, featuring encrypted requests, rate-limiting functionality
 
 ---
 
@@ -26,6 +27,7 @@
 - **Customizable Configuration**: Use `nexu.config.js` to define app configurations like port, CORS settings, body parsers, and security headers.
 - **Middleware Support**: Easily register multiple middleware functions with the `nexu.useMiddleware` method.
 - **Security Headers**: Automatically applies security headers (like CSP and XSS filters) using Helmet for enhanced protection.
+- **Rate Limiting**: Configure rate-limiting to control the number of requests per IP in a given time window, preventing abuse.
 
 ---
 
@@ -121,6 +123,7 @@ The **Configuration API** allows you to define key settings for your Nexu applic
     cert: string;
     };
   };
+  rateLimit?: Options;
 };
 ```
 
@@ -182,6 +185,26 @@ export default defineConfig({
 - **Content Security Policy (CSP)**: Define your CSP settings to restrict the sources from which your app can load content (scripts, styles, etc.).
 - **XSS Filter**: Protect your app from cross-site scripting attacks with the xssFilter option.
 - **Cross-Origin Policies**: Set `crossOriginEmbedderPolicy` and `crossOriginOpenerPolicy` for additional security.
+
+### Rate Limiting Configuration
+
+Nexu uses `express-rate-limit` to add rate-limiting feature, you can now configure the number of requests allowed per time window. Add the following to your `nexu.config.js`:
+
+**Default Config**
+
+```js
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  message: "Too many requests from this IP, please try again later.",
+  standardHeaders: true,
+  legacyHeaders: false,
+```
+
+- `windowMs`: Time window in milliseconds (e.g., 15 minutes).
+- `limit`: Maximum number of requests allowed during the windowMs period.
+- `message`: The message to display when the rate limit is exceeded.
+- `standardHeaders`: Whether to include standard rate-limit headers in the response.
+- `legacyHeaders`: Whether to include legacy rate-limit headers.
 
 ## Experimental Features
 
@@ -257,21 +280,7 @@ app.get("/", (req, res) => {
 
 ## Related Packages
 
-- **[nexujs-client](https://www.npmjs.com/package/nexujs-client)**: A complementary package for frontend applications. It automatically decrypts server responses and integrates seamlessly with Nexu
-
-Example Usage:
-
-```js
-import { Post } from "nexujs-client";
-
-Post("/auth/login", { email: "john@gmail.com", password: "securepassword" })
-  .then((response) => {
-    console.log(response);
-  })
-  .catch((error) => {
-    console.error(error);
-  });
-```
+- **[nexujs-client](https://www.npmjs.com/package/nexujs-client)**: A complementary package for frontend applications. It automatically decrypts server responses and integrates seamlessly with Nexu Server
 
 ## License
 

@@ -13,6 +13,7 @@ import fs, { existsSync } from "fs";
 import path from "path";
 import helmet from "helmet";
 import { readConfig } from "../utils/config";
+import rateLimit from "express-rate-limit";
 
 class App {
   app: Application;
@@ -35,6 +36,7 @@ class App {
     this.bodyParserConfigUrl = this.Config?.parserConfig?.url || {};
     this.registerStaticFiles();
     this.useConfig();
+    this.addLimit();
     this.useFileBasedRouting();
     routes.delete();
     this.start();
@@ -122,14 +124,30 @@ class App {
     );
   }
 
+  private addLimit() {
+    const defaultLimit = {
+      windowMs: 15 * 60 * 1000,
+      max: 100,
+      message: "Too many requests from this IP, please try again later.",
+      standardHeaders: true,
+      legacyHeaders: false,
+    };
+
+    const limiter = rateLimit({
+      windowMs: this.Config?.rateLimit?.windowMs || defaultLimit.windowMs,
+      limit: this.Config?.rateLimit?.limit || defaultLimit.max,
+      standardHeaders:
+        this.Config?.rateLimit?.standardHeaders || defaultLimit.standardHeaders,
+      legacyHeaders:
+        this.Config?.rateLimit?.legacyHeaders || defaultLimit.legacyHeaders,
+      message: this.Config?.rateLimit?.message || defaultLimit.message,
+      ...this.Config?.rateLimit,
+    });
+
+    this.app.use(limiter);
+  }
+
   private registerRoutes() {
-    // const Config = readConfig();
-    // this.cors_config = Config?.corsConfig || {};
-    // this.bodyParserConfigJson = Config?.parserConfig?.json || {};
-    // this.bodyParserConfigUrl = Config?.parserConfig?.url || {};
-
-    // this.useConfig();
-
     const { routesName, routesPath } = routes;
 
     routesName.forEach((routeName, index) => {
@@ -244,8 +262,8 @@ class App {
   }
 }
 
-const appInstance = new App();
-const app = appInstance.init();
-const nexuRouter = appInstance.getRouter();
+const nexu = new App();
+const app = nexu.init();
+const nexuRouter = nexu.getRouter();
 
-export { nexuRouter, appInstance as nexu, app };
+export { nexuRouter, nexu, app };

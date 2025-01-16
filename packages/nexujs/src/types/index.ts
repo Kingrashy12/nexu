@@ -1,6 +1,7 @@
 import { OptionsJson, OptionsUrlencoded } from "body-parser";
 import { CorsOptions } from "cors";
 import { NextFunction, Request, Response } from "express";
+import { Options } from "express-rate-limit";
 import { HelmetOptions } from "helmet";
 
 export type NexuRequest = Request;
@@ -43,10 +44,17 @@ export interface Config {
   port: 443 | 5000 | 8000 | 8080;
 
   /**
-   * A shared key used for encryption.
+   * Keys for encryption, `public` and `private`
    */
   keys: {
+    /**
+     * The public key used for encryption
+     */
     public: string;
+
+    /**
+     * The private key used for decryption
+     */
     private: string;
   };
 
@@ -102,8 +110,10 @@ export interface Config {
    * Experimental features configuration.
    */
   experimental?: NexuExperimental;
-  /** @deprecated This option is only for testing, use with caution */
-  disableHelmet?: boolean;
+  /**
+   * Rate limiting configuration.
+   */
+  rateLimit?: Options;
 }
 
 export interface EnforceHTTPSOptions {
