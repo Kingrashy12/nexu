@@ -114,6 +114,9 @@ export interface Config {
    * Rate limiting configuration.
    */
   rateLimit?: Options;
+  dev?: {
+    disableEncryption?: boolean;
+  };
 }
 
 export interface EnforceHTTPSOptions {
@@ -126,7 +129,11 @@ export type NexuMiddleware = (
   next: NexuNext
 ) => void;
 
-export type NexuHandler = NexuMiddleware;
+export type NexuHandler = (
+  req: NexuRequest,
+  res: NexuResponse,
+  next: NexuNext
+) => void;
 
 export type RequestAction = {
   /**
@@ -139,7 +146,7 @@ export type RequestAction = {
    * @returns {Promise<any>} - A promise that resolves with the result of the action, or rejects if an error occurs.
    * @throws {Error} - This function may throw an error that can be handled by subsequent error-handling middleware.
    */
-  action: (req: NexuRequest, res: NexuResponse, next: NexuNext) => Promise<any>;
+  action: NexuHandler;
 };
 
 type ErrorCode =
@@ -185,4 +192,11 @@ export type ThrowError = {
    * @type {string}
    */
   message?: string;
+};
+
+export type EncryptedData = {
+  aesKey: string;
+  cipherText: string;
+  iv: string;
+  tag: string;
 };

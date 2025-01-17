@@ -9,11 +9,13 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import https from "https";
 import http from "http";
-import fs, { existsSync } from "fs";
+import fs, { existsSync, readFileSync } from "fs";
 import path from "path";
 import helmet from "helmet";
 import { readConfig } from "../utils/config";
 import rateLimit from "express-rate-limit";
+import { sendErrorLog } from "../utils/content-send";
+import watchResError from "../middleware/res.error";
 
 class App {
   app: Application;
@@ -37,6 +39,7 @@ class App {
     this.registerStaticFiles();
     this.useConfig();
     this.addLimit();
+    this.serverLog();
     this.useFileBasedRouting();
     routes.delete();
     this.start();
@@ -122,6 +125,7 @@ class App {
     this.app.use(
       bodyParser.urlencoded({ extended: true, ...this.bodyParserConfigUrl })
     );
+    this.app.use(watchResError);
   }
 
   private addLimit() {
@@ -259,6 +263,29 @@ class App {
 
   private loadEnv() {
     return dotenv.config();
+  }
+
+  private serverLog() {
+    const errorLog = path.join(process.cwd(), "error.log");
+    if (existsSync(errorLog)) {
+      logger.info(
+        `Error logged, view at http://localhost:${this.port}/errorlog`
+      );
+
+      this.app.get("/errorlog", (req, res) => {
+        try {
+          logger.success("Serving error log file...");
+          const content = readFileSync(errorLog, "utf8");
+          const styledContent = sendErrorLog(content);
+
+          res.setHeader("Content-Type", "text/html");
+          res.send(styledContent);
+        } catch (error) {
+          console.error("Error reading the error log:", error);
+          res.status(500).send("Unable to read the error log.");
+        }
+      });
+    }
   }
 }
 

@@ -1,10 +1,12 @@
 import express, { Request, NextFunction, Router, RouterOptions } from "express";
-import { NexuRequest, NexuResponse } from "../types";
+import { NexuNext, NexuRequest, NexuResponse, ThrowError } from "../types";
 import { logger } from "./logger";
 import { decrypt, encrypt } from "./encrypt";
+import { readConfig } from "../utils/config";
 
 class NexuRouter {
   private router: Router;
+  private Config = readConfig();
 
   constructor(options?: RouterOptions) {
     this.router = express.Router(options);
@@ -38,44 +40,81 @@ class NexuRouter {
     });
   }
 
-  private decryptData(data: string) {
+  private decryptData(data: any) {
     const body = decrypt(data);
-    // const body = JSON.parse(decrypted);
     return body;
   }
 
   private decryptRequestBody(req: Request, res: NexuResponse) {
-    try {
-      if (req.body && req.body.nexu) {
-        const decryptedData = this.decryptData(req.body.nexu);
-        req.body = decryptedData;
+    const isDev =
+      process.env.NODE_ENV === "development" &&
+      this.Config?.dev?.disableEncryption;
+    if (isDev) {
+      return req.body;
+    } else {
+      try {
+        if (req.body && req.body.nexu) {
+          const decryptedData = this.decryptData(req.body.nexu);
+          req.body = decryptedData;
+        }
+      } catch (error) {
+        type Error = { message: string };
+        logger.bright(
+          "[NexuRouter] Decryption error:",
+          (error as Error).message
+        );
+        return res
+          .status(400)
+          .send({ error: "Failed to decrypt request data" });
       }
-    } catch (error) {
-      type Error = { message: string };
-      logger.bright("[NexuRouter] Decryption error:", (error as Error).message);
-      return res.status(400).send({ error: "Failed to decrypt request data" });
     }
   }
 
   private wrapHandler(handler: express.RequestHandler): express.RequestHandler {
     return async (req: NexuRequest, res: NexuResponse, next: NextFunction) => {
-      this.decryptRequestBody(req, res);
+      const isDev =
+        process.env.NODE_ENV === "development" &&
+        this.Config?.dev?.disableEncryption;
+      const logRes = req.header("error-log");
+      try {
+        if (isDev) {
+          const disableEnHeader = req.header("drop-pass");
 
-      const originalJson = res.json.bind(res);
-
-      res.json = (data: any) => {
-        try {
-          const encryptedData = encrypt(data);
-          return originalJson({ nexu: encryptedData });
-        } catch (error) {
-          const errMsg = error as any;
-          console.error(`[NexuRouter] Encryption error: ${errMsg.message}`);
-          next(error);
-          return res;
+          if (!disableEnHeader) {
+            res.setHeader("drop-pass", "true");
+          }
         }
-      };
 
-      handler(req, res, next);
+        // Decrypt request body
+        this.decryptRequestBody(req, res);
+
+        // Override res.json to handle encryption
+        const originalJson = res.json.bind(res);
+
+        res.json = (data: any) => {
+          try {
+            if (isDev || logRes) {
+              // No encryption in development if disabled
+              return originalJson(data);
+            }
+            // Encrypt the response data
+            const encryptedData = encrypt(data);
+            return originalJson({ nexu: encryptedData });
+          } catch (error) {
+            // Handle encryption errors
+            const errMsg = error as any;
+            console.error(`[NexuRouter] Encryption error: ${errMsg.message}`);
+            next(error);
+            return res;
+          }
+        };
+
+        await handler(req, res, next);
+      } catch (error) {
+        // Catch any errors from the handler and pass them to next()
+        console.error(`[NexuRouter] Handler error: ${(error as any).message}`);
+        next(error);
+      }
     };
   }
 

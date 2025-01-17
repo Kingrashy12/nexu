@@ -1,4 +1,4 @@
-import { NexuNext, NexuRequest, NexuResponse } from "../types";
+import { NexuHandler } from "../types";
 
 /**
  * Middleware function to validate the presence of required fields in the request body.
@@ -16,8 +16,8 @@ import { NexuNext, NexuRequest, NexuResponse } from "../types";
  * });
  */
 const validateFields =
-  (requiredFields: string[]) =>
-  (req: NexuRequest, res: NexuResponse, next: NexuNext) => {
+  (requiredFields: string[]): NexuHandler =>
+  (req, res, next) => {
     const missingFields = requiredFields.filter(
       (field) => !req.body[field] || req.body[field].trim() === ""
     );

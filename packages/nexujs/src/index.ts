@@ -1,4 +1,5 @@
 export * from "./app/app";
+export { encrypt, decrypt } from "./lib/encrypt";
 export * from "./middleware";
 export * from "./utils";
 export * from "./lib";

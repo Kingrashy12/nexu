@@ -1,4 +1,4 @@
-import { NexuNext, NexuRequest, NexuResponse } from "../types";
+import { NexuHandler } from "../types";
 
 /**
  * Middleware function to validate the email format in the request body.
@@ -17,7 +17,7 @@ import { NexuNext, NexuRequest, NexuResponse } from "../types";
  *   // Handle registration logic here after email validation
  * });
  */
-const validateEmail = (req: NexuRequest, res: NexuResponse, next: NexuNext) => {
+const validateEmail: NexuHandler = (req, res, next) => {
   const { email } = req.body;
 
   // Regular expression for validating email

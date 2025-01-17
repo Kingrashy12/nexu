@@ -1,3 +1,4 @@
+import { logger } from "../app/logger";
 import { RequestAction, ThrowError } from "../types";
 
 /**
@@ -55,8 +56,9 @@ export const throwError = ({
   status = "403",
   message,
 }: ThrowError) => {
+  logger.error(error.message);
   return res.status(Number(status)).json({
     message: message || "An error occurred",
-    error: error?.message || error,
+    error: typeof error === "object" && error?.message ? error.message : error,
   });
 };
