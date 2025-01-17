@@ -46,7 +46,6 @@ export default [
       json(),
       typescript({
         tsconfig: "./tsconfig.json",
-        // declarationDir: "./dist/esm"
       }),
       esbuild({ minify: true }),
       visualizer({ open: true }),

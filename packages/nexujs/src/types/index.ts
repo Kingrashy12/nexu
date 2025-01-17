@@ -127,3 +127,62 @@ export type NexuMiddleware = (
 ) => void;
 
 export type NexuHandler = NexuMiddleware;
+
+export type RequestAction = {
+  /**
+   * A function that processes the request and response, typically handling asynchronous operations.
+   * It can also call the `next` middleware if necessary.
+   *
+   * @param {NexuRequest} req - The request object, containing information about the HTTP request, such as body, headers, etc.
+   * @param {NexuResponse} res - The response object, used to send a response back to the client.
+   * @param {NexuNext} next - The next middleware function to be called in the request-response cycle.
+   * @returns {Promise<any>} - A promise that resolves with the result of the action, or rejects if an error occurs.
+   * @throws {Error} - This function may throw an error that can be handled by subsequent error-handling middleware.
+   */
+  action: (req: NexuRequest, res: NexuResponse, next: NexuNext) => Promise<any>;
+};
+
+type ErrorCode =
+  | "400"
+  | "401"
+  | "403"
+  | "404"
+  | "402"
+  | "405"
+  | "406"
+  | "408"
+  | "500"
+  | "502"
+  | "503"
+  | "504";
+
+export type ThrowError = {
+  /**
+   * The error object or details associated with the error.
+   *
+   * @type {any}
+   */
+  error?: any;
+
+  /**
+   * The response object to send back the error response.
+   *
+   * @type {NexuResponse}
+   */
+  res: NexuResponse;
+
+  /**
+   * The HTTP status code indicating the error type.
+   *
+   * @default "403"
+   */
+  status: ErrorCode;
+
+  /**
+   * Optional custom error message to provide more context.
+   * If not provided, a default message will be used.
+   *
+   * @type {string}
+   */
+  message?: string;
+};
