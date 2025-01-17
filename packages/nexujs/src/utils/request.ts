@@ -56,7 +56,8 @@ export const throwError = ({
   status = "403",
   message,
 }: ThrowError) => {
-  logger.error(error.message);
+  const err = error?.message ? error.message : error;
+  logger.error(err);
   return res.status(Number(status)).json({
     message: message || "An error occurred",
     error: typeof error === "object" && error?.message ? error.message : error,

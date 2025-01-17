@@ -75,13 +75,15 @@ class NexuRouter {
       const isDev =
         process.env.NODE_ENV === "development" &&
         this.Config?.dev?.disableEncryption;
-      const logRes = req.header("error-log");
+
+      const errorLog = req.get("x-error-log");
+
       try {
         if (isDev) {
-          const disableEnHeader = req.header("drop-pass");
+          const disableEnHeader = req.header("x-drop-pass");
 
           if (!disableEnHeader) {
-            res.setHeader("drop-pass", "true");
+            res.setHeader("x-drop-pass", "true");
           }
         }
 
@@ -93,7 +95,7 @@ class NexuRouter {
 
         res.json = (data: any) => {
           try {
-            if (isDev || logRes) {
+            if (isDev || errorLog) {
               // No encryption in development if disabled
               return originalJson(data);
             }
