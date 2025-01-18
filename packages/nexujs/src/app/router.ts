@@ -76,7 +76,8 @@ class NexuRouter {
         process.env.NODE_ENV === "development" &&
         this.Config?.dev?.disableEncryption;
 
-      const errorLog = req.get("x-error-log");
+      const errorLog = req.get("nexu-error-log");
+      const isError = errorLog === "true";
 
       try {
         if (isDev) {
@@ -95,7 +96,7 @@ class NexuRouter {
 
         res.json = (data: any) => {
           try {
-            if (isDev || errorLog) {
+            if (isError || isDev) {
               // No encryption in development if disabled
               return originalJson(data);
             }

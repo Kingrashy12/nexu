@@ -23,11 +23,11 @@ const watchResError: NexuHandler = (req, res, next) => {
   // Override the `status` method
   res.status = function (code: number) {
     if (errorCode.includes(String(code))) {
-      const errorLog = req.header("x-error-log");
+      const errorLog = req.header("nexu-error-log");
 
       // If the `error-log` header is not set, set it
       if (!errorLog) {
-        res.setHeader("x-error-log", "true");
+        res.setHeader("nexu-error-log", "true");
       }
     }
 

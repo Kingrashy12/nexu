@@ -72,7 +72,7 @@ function decrypt(encryptedData: EncryptedData) {
   const decipher = forge.cipher.createDecipher("AES-GCM", aesKey);
   decipher.start({
     iv: forge.util.decode64(encryptedData.iv),
-    tag: forge.util.decode64(encryptedData.tag),
+    tag: forge.util.decode64(encryptedData.tag) as any,
   });
   decipher.update(
     forge.util.createBuffer(forge.util.decode64(encryptedData.cipherText))
