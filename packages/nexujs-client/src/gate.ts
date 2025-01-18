@@ -1,9 +1,9 @@
 import { AxiosResponse } from "axios";
 import { decrypt, encrypt } from "./utils/encrypt";
-import { Keys } from "./types";
+import { EncryptedData, Keys } from "./types";
 
 // Function to decrypt the response
-const decryptResponse = (encryptedData: string, key: Keys) => {
+const decryptResponse = (encryptedData: EncryptedData, key: Keys) => {
   const body = decrypt(encryptedData, key);
   return body;
 };

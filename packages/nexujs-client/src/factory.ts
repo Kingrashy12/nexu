@@ -4,10 +4,11 @@ import {
   ApiClient,
   Error,
   InterceptorConfig,
+  NexuError,
   Response,
   SendRequest,
 } from "./types";
-import { getError } from "./hooks";
+import { getError } from "./utils";
 
 type Constructor = {
   publicKey: string;
@@ -195,9 +196,9 @@ class NexuClient {
   async fetchData<T>(
     url: string,
     config?: AxiosRequestConfig
-  ): Promise<{ data: T | null; error: string; loading: boolean }> {
+  ): Promise<{ data: T | null; error: NexuError; loading: boolean }> {
     let data: T | null = null;
-    let error = "";
+    let error: NexuError = {};
     let loading = true;
 
     try {

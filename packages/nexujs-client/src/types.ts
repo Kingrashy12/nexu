@@ -1,6 +1,8 @@
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
-export type Error = AxiosError & { error: string };
+export type Error = AxiosError;
+
+export type NexuError = { error?: string; message?: string };
 
 export type FetchResponse<T> = {
   data: T | null;
@@ -47,3 +49,10 @@ export interface InterceptorConfig {
   onTokenRefresh?: () => Promise<string>;
   onTokenRefreshError?: (error: any) => void;
 }
+
+export type EncryptedData = {
+  aesKey: string;
+  cipherText: string;
+  iv: string;
+  tag: string;
+};
