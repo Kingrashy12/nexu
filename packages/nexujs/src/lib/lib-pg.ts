@@ -25,6 +25,10 @@ class NexuPostgres {
    * @param {number} [params.limit] - The number of records to return per page.
    * @param {number} [params.page] - The page number for pagination.
    * @returns The result of the `useQueryLimit` utlis with the provided query and parameters.
+   *
+   * @example
+   *
+   * const results = await useQueryLimit({ req, table: "users"})
    */
   useQueryLimit({
     req,
@@ -35,6 +39,8 @@ class NexuPostgres {
     page,
     order,
     sortBy,
+    columns,
+    columns_list,
   }: RequestLimitPg) {
     return useQueryLimit({
       req,
@@ -46,6 +52,8 @@ class NexuPostgres {
       page,
       order,
       sortBy,
+      columns,
+      columns_list,
     });
   }
 }

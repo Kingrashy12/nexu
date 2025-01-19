@@ -10,7 +10,18 @@ const useQueryLimit = async ({
   sortBy = "id",
   order = "asc",
   query,
+  columns = ["*"],
+  columns_list,
 }: RequestWithLimit) => {
+  const hasLists = columns.length > 1;
+  if (hasLists && columns_list) {
+    throw new Error("Cannot use 'columns' together with 'columns_list'");
+  }
+
+  if ((hasLists && columns.includes("*")) || columns_list?.includes("*")) {
+    throw new Error("Cannot mix '*' with other columns");
+  }
+
   // Destructure page, limit, sortBy, order from req.query (default values provided)
   const {
     page: queryPage,
@@ -36,8 +47,10 @@ const useQueryLimit = async ({
   // Calculate the offset for pagination
   const offset = (Page - 1) * Limit;
 
+  const selector = hasLists ? columns.join(",") : columns_list;
+
   // Create the base query string with the WHERE clause if present
-  let queryString = `SELECT * FROM ${table}`;
+  let queryString = `SELECT ${selector} FROM ${table}`;
 
   // Add filtering conditions if whereClause is provided
   if (whereClause) {

@@ -113,7 +113,7 @@ export interface Config {
   /**
    * Rate limiting configuration.
    */
-  rateLimit?: Options;
+  rateLimit?: Partial<Options>;
   dev?: {
     disableEncryption?: boolean;
   };

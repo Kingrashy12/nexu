@@ -41,6 +41,8 @@ export interface RequestWithLimit {
   values?: unknown[];
   sortBy?: string | any;
   order?: string | any;
+  columns?: string[];
+  columns_list?: string;
 }
 
 export interface RequestLimitPg {
@@ -93,4 +95,22 @@ export interface RequestLimitPg {
    * @type {string | any}
    */
   order?: "asc" | "desc";
+
+  /**
+   * An array of column names to be selected from the database.
+   *
+   * @example ['id', 'name'] // Select specific columns
+   *
+   * @default ['*'] // Select all columns
+   */
+  columns?: string[];
+
+  /**
+   * A string of column names to be selected from the database.
+   *
+   * @example "id, name" // Select specific columns
+   *
+   * @default '*' // Select all columns
+   */
+  columns_list?: string;
 }
