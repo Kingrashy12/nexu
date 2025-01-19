@@ -1,8 +1,10 @@
-export const mainFile = `import { app, sendContent } from "nexujs";
+export const mainFile = `import { app, sendContent, ErrorLogger } from "nexujs";
 
 app.get('/', (req, res) => {
    res.send(sendContent); 
-});`;
+});
+
+app.use(ErrorLogger);`;
 
 export const gitignore = `# Node.js dependencies
 /node_modules/
@@ -41,9 +43,6 @@ export const tsconfigFile = `{
     "noUnusedLocals": true,
     "noImplicitAny": true,
     "outDir": "./dist",
-    "paths": {
-      "@/*": ["./*"]
-    }
   },
     "include": ["./**/*.ts"],
   "exclude": ["node_modules"]
