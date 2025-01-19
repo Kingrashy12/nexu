@@ -13,8 +13,8 @@
     - [File structure](#file-structure)
 - [Middleware](#middleware)
   - [useMiddleware](#usemiddleware)
-- [Security](#security)
-  - [Key Regeneration](#key-regeneration)
+  <!-- - [Security](#security)
+  - [Key Regeneration](#key-regeneration) -->
 - [Related Packages](#related-packages)
 - [License](#license)
 
@@ -280,9 +280,9 @@ app.get("/", (req, res) => {
 });
 ```
 
-## Security
+<!-- ## Security -->
 
-### Key Regeneration
+<!-- ### Key Regeneration
 
 For enhanced security, **it is recommended to regenerate your RSA keys periodically**. Over time, the security of keys may degrade, and renewing them ensures your application's encryption remains robust and secure.
 
@@ -294,7 +294,7 @@ To regenerate your keys, run the following command:
 npx nexujs-cli rekey
 ```
 
-This process will replace the existing keys with freshly generated ones. Make sure to update your environment variables or configuration files with the new keys.
+This process will replace the existing keys with freshly generated ones. Make sure to update your environment variables or configuration files with the new keys. -->
 
 ## Related Packages
 
