@@ -196,7 +196,7 @@ Nexu uses `express-rate-limit` to add rate-limiting feature, you can now configu
 
 ```js
   windowMs: 15 * 60 * 1000,
-  limit: 100,
+  limit: 20,
   message: "Too many requests from this IP, please try again later.",
   standardHeaders: true,
   legacyHeaders: false,
