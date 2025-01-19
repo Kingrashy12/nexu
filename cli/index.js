@@ -3,7 +3,7 @@
 import { Command } from "commander";
 import { createApp } from "./src/lib/create.js";
 import { updateBatch } from "./src/lib/update-pkg.js";
-import { generateKey } from "./src/lib/regenerateKeys.js";
+// import { generateKey } from "./src/lib/regenerateKeys.js";
 
 const program = new Command();
 
@@ -28,9 +28,9 @@ program
     createApp.init();
   });
 
-program
-  .command("rekey")
-  .description("Regenerate rsa keys.")
-  .action(() => generateKey());
+// program
+//   .command("rekey")
+//   .description("Regenerate rsa keys.")
+//   .action(() => generateKey());
 
 program.parse(process.argv);
