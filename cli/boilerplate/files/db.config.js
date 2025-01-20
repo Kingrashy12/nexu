@@ -1,6 +1,6 @@
 import NodeRSA from "node-rsa";
 
-const key = new NodeRSA({ b: 2048 });
+const key = new NodeRSA({ b: 3072 });
 
 const public_key = key.exportKey("public");
 const private_key = key.exportKey("private");
