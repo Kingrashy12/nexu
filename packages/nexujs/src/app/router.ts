@@ -1,5 +1,5 @@
-import express, { Request, NextFunction, Router, RouterOptions } from "express";
-import { NexuNext, NexuRequest, NexuResponse, ThrowError } from "../types";
+import express, { Request, Router, RouterOptions } from "express";
+import { NexuResponse } from "../types";
 import { logger } from "./logger";
 import { decrypt, encrypt } from "./encrypt";
 import { readConfig } from "../utils/config";
@@ -71,20 +71,20 @@ class NexuRouter {
   }
 
   private wrapHandler(handler: express.RequestHandler): express.RequestHandler {
-    return async (req: NexuRequest, res: NexuResponse, next: NextFunction) => {
+    return async (req, res, next) => {
       const isDev =
         process.env.NODE_ENV === "development" &&
         this.Config?.dev?.disableEncryption;
 
-      const errorLog = req.get("nexu-error-log");
-      const isError = errorLog === "true";
+      const log = res.getHeader("nexu-log");
+      const isError = log === "error";
 
       try {
         if (isDev) {
-          const disableEnHeader = req.header("x-drop-pass");
+          const disableEnHeader = req.header("nexu-mode");
 
           if (!disableEnHeader) {
-            res.setHeader("x-drop-pass", "true");
+            res.setHeader("nexu-mode", "dev");
           }
         }
 

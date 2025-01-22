@@ -118,12 +118,12 @@ The **Configuration API** allows you to define key settings for your Nexu applic
     url?: OptionsUrlencoded;
   };
   helmetOptions?: HelmetOptions;
-  experimental?: {
-    fileBasedRouting?: boolean;
-    httpsKeyPaths?: {
+  httpsKeyPaths?: {
     key: string;
     cert: string;
-    };
+  },
+  experimental?: {
+    fileBasedRouting?: boolean;
   };
   rateLimit?: Options;
 };

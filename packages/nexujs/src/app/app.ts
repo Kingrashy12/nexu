@@ -28,6 +28,7 @@ class App {
   private Config = readConfig();
   constructor() {
     this.app = express();
+    this.app.use(watchResError);
     this.router = this.nexuRouter;
     this.registerSecurityHeaders();
     this.app.use(express.json());
@@ -125,7 +126,6 @@ class App {
     this.app.use(
       bodyParser.urlencoded({ extended: true, ...this.bodyParserConfigUrl })
     );
-    this.app.use(watchResError);
   }
 
   private addLimit() {
@@ -166,7 +166,7 @@ class App {
           try {
             const module = await import(routeURL);
             if (module.default) {
-              module.default(req, res, next); // Route logic
+              module.default(req, res, next);
             } else {
               console.error(`[NexuApp] Invalid route module at ${routeURL}`);
               res
@@ -190,11 +190,10 @@ class App {
   private startHttps(key: string, cert: string, port: number) {
     // Start HTTP server for redirecting HTTP to HTTPS
     const httpServer = http.createServer((req, res) => {
-      // Use Express for the response handling
       this.app(req, res);
     });
 
-    // Add middleware to redirect HTTP to HTTPS before passing to Express
+    // A middleware to redirect HTTP to HTTPS before passing to Express
     httpServer.on("request", (req, res) => {
       if (req.headers["x-forwarded-proto"] !== "https") {
         res.writeHead(301, {
@@ -202,7 +201,7 @@ class App {
         });
         res.end();
       } else {
-        this.app(req, res); // Let Express handle the request if HTTPS
+        this.app(req, res);
       }
     });
 
@@ -235,7 +234,7 @@ class App {
 
     if (httpsOptions) {
       const httpsServer = https.createServer(httpsOptions, this.app);
-      const serverPort = port || 443;
+      const serverPort = port;
       httpsServer.listen(serverPort, () => {
         logger.success(
           `HTTPS server running on https://localhost:${serverPort}`
@@ -250,7 +249,7 @@ class App {
 
   private start() {
     const PORT = this.port;
-    const httpsKey = this.Config?.experimental?.httpsKeyPaths;
+    const httpsKey = this.Config?.httpsKeyPaths;
     if (httpsKey?.cert && httpsKey.key) {
       const { key, cert } = httpsKey;
       this.startHttps(key, cert, PORT);
@@ -268,8 +267,12 @@ class App {
   private serverLog() {
     const errorLog = path.join(process.cwd(), "error.log");
     if (existsSync(errorLog)) {
+      const onHttps = this.Config?.httpsKeyPaths;
+
       logger.info(
-        `Error logged, view at http://localhost:${this.port}/errorlog`
+        `Error logged, view at ${onHttps ? "https" : "http"}://localhost:${
+          this.port
+        }/errorlog`
       );
 
       this.app.get("/errorlog", (req, res) => {

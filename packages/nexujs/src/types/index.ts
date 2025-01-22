@@ -15,33 +15,14 @@ type NexuExperimental = {
    * If true, routes will be automatically generated based on the file structure.
    */
   fileBasedRouting?: boolean;
-  /**
-   * Optional SSL/TLS key and certificate configuration for HTTPS.
-   * Used when setting up secure HTTPS connections for the app.
-   */
-  httpsKeyPaths?: {
-    /**
-     * The relative path to the private key file.
-     * The path should be relative to the project root and must point to the private key file.
-     * @example "config/private-key.pem"
-     */
-    key: string;
-
-    /**
-     * The relative path to the SSL certificate file.
-     * The path should be relative to the project root and must point to the SSL certificate file.
-     * @example "config/certificate.pem"
-     */
-    cert: string;
-  };
 };
 
 export interface Config {
   /**
    * The port the server will listen on.
-   * Must be one of the predefined values: 443 (HTTPS), 5000, 8000, or 8080.
+   * Must be one of the predefined values: 443, 3443 (HTTPS), 5000, 8000, or 8080.
    */
-  port: 443 | 5000 | 8000 | 8080;
+  port: 3443 | 443 | 5000 | 8000 | 8080;
 
   /**
    * Keys for encryption, `public` and `private`
@@ -106,6 +87,29 @@ export interface Config {
    * });
    */
   helmetOptions?: HelmetOptions;
+
+  /**
+   * Configuration for SSL/TLS key and certificate to enable HTTPS.
+   * Provides secure communication by encrypting data transmitted between
+   * the client and the server.
+   */
+
+  httpsKeyPaths?: {
+    /**
+     * The relative path to the private key file.
+     * The path should be relative to the project root and must point to the private key file.
+     * @example "./cert/key.pem"
+     */
+    key: string;
+
+    /**
+     * The relative path to the SSL certificate file.
+     * The path should be relative to the project root and must point to the SSL certificate file.
+     * @example "./cert/certificate.pem"
+     */
+    cert: string;
+  };
+
   /**
    * Experimental features configuration.
    */
@@ -113,7 +117,14 @@ export interface Config {
   /**
    * Rate limiting configuration.
    */
+
   rateLimit?: Partial<Options>;
+
+  /**
+   * Development-specific configuration options.
+   * - `disableEncryption`: Optional flag to disable encryption for development purposes.
+   *   Useful for local testing and debugging without the overhead of secure connections.
+   */
   dev?: {
     disableEncryption?: boolean;
   };
