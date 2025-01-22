@@ -61,18 +61,24 @@ class App {
    * @param {Array<Function>} ware - An array of middleware functions to apply.
    */
   useMiddleware(ware: NexuMiddleware[]) {
-    logger.info("Appling middleware...");
+    if (this.Config?.experimental?.fileBasedRouting) {
+      logger.info("Appling middleware...");
 
-    if (Array.isArray(ware)) {
-      ware.forEach((middleware) => {
-        if (middleware && typeof middleware === "function") {
-          this.app.use(middleware);
-        }
-      });
+      if (Array.isArray(ware)) {
+        ware.forEach((middleware) => {
+          if (middleware && typeof middleware === "function") {
+            this.app.use(middleware);
+          }
+        });
+      } else {
+        logger.error(
+          "The 'use' property must be an array of functions. Received: " +
+            typeof ware
+        );
+      }
     } else {
-      logger.error(
-        "The 'use' property must be an array of functions. Received: " +
-          typeof ware
+      logger.warning(
+        "useMiddleware should only be used when fileBasedRouting is enabled."
       );
     }
   }
