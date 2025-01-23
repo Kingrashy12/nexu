@@ -1,6 +1,6 @@
 {
   "name": "nexujs-cli",
-  "version": "0.1.23",
+  "version": "0.1.24",
   "main": "index.js",
   "type": "module",
   "repository": {
