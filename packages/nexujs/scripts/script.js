@@ -20,7 +20,7 @@ const runDev = () => {
 
 const runDevTs = () => {
   try {
-    execSync('npx tsc && concurrently "tsc --watch" "nodemon dist/server.js"', {
+    execSync('tsc-watch --onsuccess "node dist/server.js"', {
       stdio: "inherit",
     });
   } catch (error) {

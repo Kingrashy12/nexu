@@ -42,9 +42,9 @@ export const getPkg = (appName) => {
     "nexujs": "^0.1.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5",
+    "tsc-watch": "^6.2.1",
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/node": "^22.10.7"

@@ -16,3 +16,4 @@
 .env
 .releaserc.json
 /packages-lock.json
+/nexu-server

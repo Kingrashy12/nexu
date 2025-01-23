@@ -130,20 +130,16 @@ export interface Config {
   };
 }
 
-export interface EnforceHTTPSOptions {
-  redirectHTTP: boolean;
-}
-
 export type NexuMiddleware = (
-  req: NexuRequest,
-  res: NexuResponse,
-  next: NexuNext
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => void;
 
 export type NexuHandler = (
-  req: NexuRequest,
-  res: NexuResponse,
-  next: NexuNext
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) => void;
 
 export type RequestAction = {
@@ -187,7 +183,7 @@ export type ThrowError = {
    *
    * @type {NexuResponse}
    */
-  res: NexuResponse;
+  res: Response;
 
   /**
    * The HTTP status code indicating the error type.

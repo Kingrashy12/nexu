@@ -11,11 +11,9 @@ class NexuRouter {
   constructor(options?: RouterOptions) {
     this.router = express.Router(options);
 
-    // Extend HTTP methods to include encryption
     this.extendMethods();
   }
 
-  // Extend methods to add encryption middleware
   private extendMethods(): void {
     const methodsToExtend: Array<keyof Router> = [
       "post",
@@ -77,7 +75,7 @@ class NexuRouter {
         this.Config?.dev?.disableEncryption;
 
       const log = res.getHeader("nexu-log");
-      const isError = log === "error";
+      const isErr = log === "error";
 
       try {
         if (isDev) {
@@ -88,23 +86,19 @@ class NexuRouter {
           }
         }
 
-        // Decrypt request body
         this.decryptRequestBody(req, res);
 
-        // Override res.json to handle encryption
         const originalJson = res.json.bind(res);
 
         res.json = (data: any) => {
           try {
-            if (isError || isDev) {
-              // No encryption in development if disabled
+            if (isErr || isDev) {
               return originalJson(data);
             }
-            // Encrypt the response data
+
             const encryptedData = encrypt(data);
             return originalJson({ nexu: encryptedData });
           } catch (error) {
-            // Handle encryption errors
             const errMsg = error as any;
             console.error(`[NexuRouter] Encryption error: ${errMsg.message}`);
             next(error);
@@ -114,7 +108,6 @@ class NexuRouter {
 
         await handler(req, res, next);
       } catch (error) {
-        // Catch any errors from the handler and pass them to next()
         console.error(`[NexuRouter] Handler error: ${(error as any).message}`);
         next(error);
       }

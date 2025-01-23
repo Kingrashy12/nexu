@@ -44,8 +44,8 @@ export const getPkgWithDB = (appName) => {
     "nexujs": "^0.1.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
+    "tsc-watch": "^6.2.1",
     "typescript": "^5.4.5",
     "@types/cors": "^2.8.17",
     "@types/node": "^22.10.7",
@@ -99,8 +99,8 @@ export const getPkgWithDB = (appName) => {
     "pg": "^8.13.1"
   },
     "devDependencies": {
-    "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
+    "tsc-watch": "^6.2.1",
     "typescript": "^5.4.5",
     "@types/cors": "^2.8.17",
     "@types/node": "^22.10.7",
