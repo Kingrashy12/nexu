@@ -17,7 +17,7 @@
 To create a new NexuJs project, run:
 
 ```bash
-npx nexujs-cli create
+npx nexujs-cli init
 ```
 
 ## License

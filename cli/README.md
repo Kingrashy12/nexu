@@ -7,7 +7,7 @@
 - [CLI Command](#cli-command)
   - [init](#init)
   - [update-deps](#update-deps)
-  - [rekey](#rekey)
+  <!-- - [rekey](#rekey) -->
 - [License](#license)
 
 The **NexuJs CLI** is a command-line tool designed to help you quickly scaffold new NexuJs projects, and manage dependencies for NexuJs-based applications.
@@ -54,7 +54,7 @@ Update all dependencies in your scaffolded NexuJs project to their latest versio
 npx nexujs-cli update-deps
 ```
 
-### `rekey`
+<!-- ### `rekey`
 
 Generate a new RSA keys with length options
 
@@ -62,7 +62,7 @@ Generate a new RSA keys with length options
 
 ```bash
 npx nexujs-cli rekey
-```
+``` -->
 
 ## License
 
