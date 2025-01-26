@@ -3,7 +3,7 @@ import routes from "./routes";
 import { pathToFileURL } from "url";
 import dotenv from "dotenv";
 import { logger } from "./logger";
-import { NexuMiddleware, NexuNext, NexuRequest, NexuResponse } from "../types";
+import { NexuMiddleware } from "../types";
 import NexuRouter from "./router";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -15,7 +15,6 @@ import helmet from "helmet";
 import { readConfig } from "../utils/config";
 import rateLimit from "express-rate-limit";
 import { sendErrorLog } from "../utils/content-send";
-import watchResError from "../middleware/res.error";
 
 class App {
   app: Application;
@@ -28,7 +27,6 @@ class App {
   private Config = readConfig();
   constructor() {
     this.app = express();
-    this.app.use(watchResError);
     this.router = this.nexuRouter;
     this.registerSecurityHeaders();
     this.app.use(express.json());
@@ -126,7 +124,7 @@ class App {
   }
 
   private useConfig() {
-    this.app.options("*", cors(this.cors_config));
+    // this.app.options("*", cors(this.cors_config));
     this.app.use(cors(this.cors_config));
     this.app.use(bodyParser.json(this.bodyParserConfigJson));
     this.app.use(
@@ -166,31 +164,25 @@ class App {
       const addon = this.Config?.addonPrefix;
       const path = addon ? `/${addon}/${routeName}` : `/${routeName}`;
 
-      this.app.use(
-        path,
-        async (req: NexuRequest, res: NexuResponse, next: NexuNext) => {
-          try {
-            const module = await import(routeURL);
-            if (module.default) {
-              module.default(req, res, next);
-            } else {
-              console.error(`[NexuApp] Invalid route module at ${routeURL}`);
-              res
-                .status(500)
-                .send({ error: "Route module not properly exported" });
-            }
-          } catch (error) {
-            logger.error(`Error loading route ${path}:`, error);
-            next(error);
+      this.app.use(path, async (req, res, next) => {
+        try {
+          const module = await import(routeURL);
+          if (module.default && typeof module.default === "function") {
+            module.default(req, res, next);
+          } else {
+            logger.error(`\n[NexuApp] Invalid route module at ${routeURL}`);
+            res
+              .status(500)
+              .send({ error: "Route module not properly exported" });
           }
+        } catch (error) {
+          logger.error(`Error loading route ${path}:`, error);
+          next(error);
         }
-      );
+      });
     });
 
-    // Catch-all route for 404 errors
-    this.app.use((req, res) => {
-      res.status(404).send("Route not found");
-    });
+    this.app.use(this.router);
   }
 
   private startHttps(key: string, cert: string, port: number) {

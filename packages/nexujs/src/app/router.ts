@@ -74,8 +74,20 @@ class NexuRouter {
         process.env.NODE_ENV === "development" &&
         this.Config?.dev?.disableEncryption;
 
-      const log = res.getHeader("nexu-log");
-      const isErr = log === "error";
+      const originalStatus = res.status.bind(res);
+
+      let error = false;
+
+      // Overridden `res.status` to track error status codes
+      res.status = (code: number) => {
+        const errorCode = [
+          400, 401, 402, 403, 404, 405, 406, 408, 500, 502, 503, 504,
+        ];
+        if (errorCode.includes(code)) {
+          error = true;
+        }
+        return originalStatus(code);
+      };
 
       try {
         if (isDev) {
@@ -92,7 +104,7 @@ class NexuRouter {
 
         res.json = (data: any) => {
           try {
-            if (isErr || isDev) {
+            if (error || isDev) {
               return originalJson(data);
             }
 
