@@ -5,7 +5,6 @@ import {
   helloRoute,
   mainFile,
   nexuConfig,
-  nodemonFile,
   readmeFile,
   tsconfigFile,
 } from "../../boilerplate/files/files.js";
@@ -35,8 +34,6 @@ export const Files = (appName) => {
 
   const tscFile = tsconfigFile;
 
-  const nodemon = nodemonFile;
-
   const configFile = dbConfig();
 
   const envContent = envFile();
@@ -49,7 +46,6 @@ export const Files = (appName) => {
     pkg,
     pkgTs,
     serverFile,
-    nodemon,
     envContent,
     configFile,
     tscFile,
@@ -158,7 +154,6 @@ const createFiles = async (isTs, appName) => {
   await createFile(`${appName}/nexu.config${ext}`, nexuConfig);
   await createFile(`${appName}/README.md`, readmeFile);
   if (ext === ".ts") {
-    await createFile(`${appName}/nodemon.json`, nodemonFile);
     await createFile(`${appName}/tsconfig.json`, tsconfigFile);
   }
 };
@@ -187,7 +182,7 @@ const addFiles = async (isTs, appName, db, git) => {
     }
 
     if (ext === ".ts") {
-      files.push("nodemon.json", "tsconfig.json");
+      files.push("tsconfig.json");
     }
 
     logger.log("\nfiles:\n");

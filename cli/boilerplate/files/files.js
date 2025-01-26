@@ -24,14 +24,6 @@ yarn-error.log*
 /build/
 /coverage/`;
 
-export const nodemonFile = `{
-  "execMap": {
-    "ts": "ts-node"
-  },
-  "watch": ["./**/*.ts"],
-  "ext": "ts"
-}`;
-
 export const tsconfigFile = `{
   "compilerOptions": {
     "target": "ESNext",
@@ -41,7 +33,6 @@ export const tsconfigFile = `{
     "esModuleInterop": true,
     "strict": true,
     "noUnusedLocals": true,
-    "noImplicitAny": true,
     "outDir": "./dist",
   },
     "include": ["./**/*.ts"],
