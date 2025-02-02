@@ -19,7 +19,7 @@ const validateFields =
   (requiredFields: string[]): NexuHandler =>
   (req, res, next) => {
     const missingFields = requiredFields.filter(
-      (field) => !req.body[field] || req.body[field].trim() === ""
+      (field) => !req.body[field] || req.body[field].toString().trim() === ""
     );
 
     if (missingFields.length > 0) {
