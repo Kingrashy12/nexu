@@ -126,6 +126,7 @@ export interface Config {
    *   Useful for local testing and debugging without the overhead of secure connections.
    */
   dev?: {
+    /** Only use this on development, don't add the `NODE_ENV=development` to your production env. */
     disableEncryption?: boolean;
   };
 }

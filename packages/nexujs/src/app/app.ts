@@ -3,7 +3,7 @@ import routes from "./routes";
 import { pathToFileURL } from "url";
 import dotenv from "dotenv";
 import { logger } from "./logger";
-import { NexuMiddleware } from "../types";
+import { NexuMiddleware, NexuNext, NexuRequest, NexuResponse } from "../types";
 import NexuRouter from "./router";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -114,9 +114,7 @@ class App {
     const autoRoutes = this.Config?.experimental?.fileBasedRouting;
     if (autoRoutes) {
       logger.warning(
-        "The experimental feature 'fileBasedRouting' is enabled.\n" +
-          "This feature is not stable and may lead to unexpected behavior.\n" +
-          "Please use it with caution."
+        "The experimental feature 'fileBasedRouting' is enabled.\n"
       );
 
       this.registerRoutes();
@@ -155,6 +153,69 @@ class App {
     this.app.use(limiter);
   }
 
+  private async handleModule(
+    routeURL: string,
+    req: NexuRequest,
+    res: NexuResponse,
+    next: NexuNext,
+    isESM: boolean
+  ) {
+    try {
+      const module = await this.loadModule(routeURL, isESM);
+      this.invokeModuleHandler(module, req, res, next);
+    } catch (error) {
+      logger.error(`Error loading module at ${routeURL}:`, error);
+      res.status(500).send({ error: "Internal server error" });
+    }
+  }
+
+  /** Loads the module based on the environment (ESM or CommonJS).*/
+  private async loadModule(routeURL: string, isESM: boolean) {
+    if (isESM) {
+      return this.loadESMModule(routeURL);
+    } else {
+      return this.loadCommonJSModule(routeURL);
+    }
+  }
+
+  /** Loads an ESM module. */
+  private async loadESMModule(routeURL: string) {
+    const module = await import(routeURL);
+
+    if (!module.default || typeof module.default !== "function") {
+      throw new Error(`Invalid default export in ESM module at ${routeURL}`);
+    }
+    return module;
+  }
+
+  /** Loads a CommonJS module.*/
+  private loadCommonJSModule(routeURL: string) {
+    const module = require(routeURL);
+
+    if (module.default && typeof module.default === "function") {
+      return module;
+    } else if (typeof module === "function") {
+      return { default: module };
+    } else {
+      throw new Error(`Invalid route module at ${routeURL}`);
+    }
+  }
+
+  /** Invokes the module's handler function with the provided parameters. */
+  private invokeModuleHandler(
+    module: any,
+    req: NexuRequest,
+    res: NexuResponse,
+    next: NexuNext
+  ) {
+    try {
+      module.default(req, res, next);
+    } catch (error) {
+      logger.error(`Error invoking handler in module:`, error);
+      res.status(500).send({ error: "Error processing the route" });
+    }
+  }
+
   private registerRoutes() {
     const { routesName, routesPath } = routes;
 
@@ -164,21 +225,10 @@ class App {
       const addon = this.Config?.addonPrefix;
       const path = addon ? `/${addon}/${routeName}` : `/${routeName}`;
 
+      const isESM = module.constructor.name === "Module";
+
       this.app.use(path, async (req, res, next) => {
-        try {
-          const module = await import(routeURL);
-          if (module.default && typeof module.default === "function") {
-            module.default(req, res, next);
-          } else {
-            logger.error(`\n[NexuApp] Invalid route module at ${routeURL}`);
-            res
-              .status(500)
-              .send({ error: "Route module not properly exported" });
-          }
-        } catch (error) {
-          logger.error(`Error loading route ${path}:`, error);
-          next(error);
-        }
+        await this.handleModule(routeURL, req, res, next, isESM);
       });
     });
 
