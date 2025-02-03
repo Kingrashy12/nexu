@@ -243,7 +243,7 @@ const router = nexuRouter;
 
 router.post("/login", loginController);
 
-export default router;
+export = router;
 ```
 
 When this feature is enabled, Nexu will automatically map this route to `localhost:5000/auth`.
