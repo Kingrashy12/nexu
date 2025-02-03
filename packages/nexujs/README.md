@@ -235,6 +235,8 @@ For example:
 
 #### File structure
 
+- **TypeScript**
+
 ```js
 import { nexuRouter } from "nexujs";
 import { loginController } from "./controllers/auth.js";
@@ -246,7 +248,22 @@ router.post("/login", loginController);
 export = router;
 ```
 
+- **JavaScript**
+
+```js
+import { nexuRouter } from "nexujs";
+import { loginController } from "./controllers/auth.js";
+
+const router = nexuRouter;
+
+router.post("/login", loginController);
+
+export default router;
+```
+
 When this feature is enabled, Nexu will automatically map this route to `localhost:5000/auth`.
+
+> **Note**: When working with modules inside the `routes` folder in TypeScript, ensure that you use `export =` instead of `export default` for proper module loading. This is necessary due to how CommonJS and ESM modules are handled, particularly when `fileBasedRouting` is enabled.
 
 ## Middleware
 
