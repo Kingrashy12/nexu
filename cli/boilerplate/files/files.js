@@ -39,7 +39,20 @@ export const tsconfigFile = `{
   "exclude": ["node_modules"]
 }`;
 
-export const helloRoute = `// All routes should be structured as follows
+const jsRoute = `// All routes should be structured as follows
+import { nexuRouter, sendMsg } from "nexujs";
+
+const router = nexuRouter;
+
+router.get("/", (req, res) => {
+  // Try Changing this to \`res.json\`
+  res.send("Hi 👋, Welcome to the Nexu.");
+  console.log(sendMsg().log);
+});
+
+export default router;`;
+
+const tsRoute = `// All routes should be structured as follows
 import { nexuRouter, sendMsg } from "nexujs";
 
 const router = nexuRouter;
@@ -51,6 +64,8 @@ router.get("/", (req, res) => {
 });
 
 export = router;`;
+
+export const helloRoute = { jsRoute, tsRoute };
 
 export const nexuConfig = `import { defineConfig } from "nexujs";
 

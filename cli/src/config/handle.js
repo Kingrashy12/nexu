@@ -148,7 +148,10 @@ const createDBConfig = async (isTs, db, appName) => {
 const createFiles = async (isTs, appName) => {
   const ext = isTs === "yes" ? ".ts" : ".js";
 
-  await createFile(`${appName}/routes/hello${ext}`, helloRoute);
+  await createFile(
+    `${appName}/routes/hello${ext}`,
+    ext === ".ts" ? helloRoute.tsRoute : helloRoute.jsRoute
+  );
   await createFile(`${appName}/server${ext}`, mainFile);
   await createFile(`${appName}/.gitignore`, gitignore);
   await createFile(`${appName}/nexu.config${ext}`, nexuConfig);
