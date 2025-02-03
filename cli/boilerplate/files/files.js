@@ -50,7 +50,7 @@ router.get("/", (req, res) => {
   console.log(sendMsg().log);
 });
 
-export default router;`;
+export = router;`;
 
 export const nexuConfig = `import { defineConfig } from "nexujs";
 
