@@ -13,7 +13,6 @@ const externalDeps = [
   "chalk",
   "dotenv",
   "commander",
-  "concurrently",
   "cors",
   "node-rsa",
   "helmet",
@@ -21,6 +20,7 @@ const externalDeps = [
   "body-parser",
   "node-forge",
   "express-rate-limit",
+  "@types/node-forge",
 ];
 
 export default [

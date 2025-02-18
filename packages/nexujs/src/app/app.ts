@@ -25,6 +25,10 @@ class App {
   private nexuRouter = new NexuRouter().getRouter();
   private port: number;
   private Config = readConfig();
+  private hasLoggedStaticFiles = false;
+  private hasStartServer = false;
+  private hasLoggedServerError = false;
+
   constructor() {
     this.app = express();
     this.router = this.nexuRouter;
@@ -91,22 +95,22 @@ class App {
   }
 
   private registerStaticFiles(): void {
-    logger.info("Checking public paths for static files...");
-    // Serve static files from 'public' directory in the root folder
-    const publicDir = path.join(process.cwd(), "public");
-    // Serve static files from 'nexujs/public' directory inside node_modules
-    const libDir = path.join(process.cwd(), "node_modules/nexujs/public");
-
-    // Check if the library static folder exists
-    if (existsSync(libDir)) {
-      logger.success("Serving static files from 'nexujs/public'.");
-      this.app.use("/nexujs", express.static(libDir)); // Mount at /nexujs path
+    if (!this.hasLoggedStaticFiles) {
+      logger.info("Checking public paths for static files...");
+      this.hasLoggedStaticFiles = true;
     }
 
-    // Serve static files from the local 'public' directory
+    const publicDir = path.join(process.cwd(), "public");
+    const libDir = path.join(process.cwd(), "node_modules/nexujs/public");
+
+    if (existsSync(libDir)) {
+      logger.success("Serving static files from 'nexujs/public'.");
+      this.app.use("/nexujs", express.static(libDir));
+    }
+
     if (existsSync(publicDir)) {
       logger.success("Serving static files from 'public'.");
-      this.app.use(express.static(publicDir)); // Serve files at root path '/'
+      this.app.use(express.static(publicDir));
     }
   }
 
@@ -236,7 +240,8 @@ class App {
   }
 
   private startHttps(key: string, cert: string, port: number) {
-    // Start HTTP server for redirecting HTTP to HTTPS
+    if (this.hasStartServer) return;
+
     const httpServer = http.createServer((req, res) => {
       this.app(req, res);
     });
@@ -255,7 +260,9 @@ class App {
 
     // Start HTTP server on port 80
     httpServer.listen(80, () => {
-      console.log("HTTP server running on http://localhost:80");
+      if (!this.hasStartServer) {
+        console.log("HTTP server running on http://localhost:80");
+      }
     });
 
     const fetchKeyPath = () => {
@@ -293,19 +300,27 @@ class App {
         "Failed to start HTTPS server due to missing key/certificate."
       );
     }
+
+    this.hasStartServer = true;
   }
 
   private start() {
     const PORT = this.port;
     const httpsKey = this.Config?.httpsKeyPaths;
+
+    if (this.hasStartServer) return;
+
     if (httpsKey?.cert && httpsKey.key) {
       const { key, cert } = httpsKey;
       this.startHttps(key, cert, PORT);
+      this.hasStartServer = true;
     } else {
       this.app.listen(PORT, () => {
         logger.success(`Server running on port http://localhost:${PORT}`);
       });
     }
+
+    this.hasStartServer = true;
   }
 
   private loadEnv() {
@@ -317,11 +332,15 @@ class App {
     if (existsSync(errorLog)) {
       const onHttps = this.Config?.httpsKeyPaths;
 
-      logger.info(
-        `Error logged, view at ${onHttps ? "https" : "http"}://localhost:${
-          this.port
-        }/errorlog`
-      );
+      fs.watchFile(errorLog, (curr, prev) => {
+        if (curr.mtime !== prev.mtime) {
+          logger.info(
+            `Error logged, view at ${onHttps ? "https" : "http"}://localhost:${
+              this.port
+            }/errorlog`
+          );
+        }
+      });
 
       this.app.get("/errorlog", (req, res) => {
         try {
