@@ -1,6 +1,6 @@
 {
   "name": "nexujs-cli",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "main": "index.js",
   "type": "module",
   "repository": {
@@ -30,6 +30,7 @@
   "dependencies": {
     "@clack/prompts": "^0.9.0",
     "chalk": "^5.4.1",
+    "cli-spinners": "^3.2.0",
     "commander": "^12.1.0",
     "node-rsa": "^1.1.1",
     "ora": "^8.1.1"
