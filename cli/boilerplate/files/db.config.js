@@ -8,17 +8,28 @@ const private_key = key.exportKey("private");
 export const envFile = () => {
   const pg = `NEXU_PUBLIC_KEY="${public_key}"
 NEXU_PRIVATE_KEY="${private_key}"
+
 PG_USER=YourUserName
 PG_DB=YourDatabase
 PG_PASS=YourPassword
-PG_HOST=YourHost`;
+PG_HOST=YourHost
+
+# Do not use this in production
+NODE_ENV="development"`;
 
   const mongo = `NEXU_PUBLIC_KEY="${public_key}"
 NEXU_PRIVATE_KEY="${private_key}"
-DB_STRING=Your Connection String`;
+
+DB_STRING=Your Connection String
+
+# Do not use this in production
+NODE_ENV="development"`;
 
   const main = `NEXU_PUBLIC_KEY="${public_key}"
-NEXU_PRIVATE_KEY="${private_key}"`;
+NEXU_PRIVATE_KEY="${private_key}"
+
+# Do not use this in production
+NODE_ENV="development"`;
 
   return { pg, mongo, main };
 };
@@ -52,7 +63,7 @@ export const query = async (
 
   const mongo = `import mongoose from "mongoose";
   
-const DB_STRING = process.env.DB || "";
+const DB_STRING = process.env.DB_STRING || "";
   
 // Connection options, including connection pooling settings
 const options = {
@@ -79,9 +90,9 @@ const connectDB = async () => {
       ) {
         throw new Error("Server timed out");
       } else {
-        console.error('Connection failed: {error?.message}'); //Update this line
+        console.error('Connection failed: {error?.message}');
       }
-      process.exit(1); // Optionally exit the process if the connection fails
+      process.exit(1); 
   }
 };
   
