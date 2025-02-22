@@ -1,8 +1,17 @@
 import { execSync } from "child_process";
 
+const startTs = () => {
+  try {
+    execSync("node dist/server.js", { stdio: "inherit" });
+  } catch (error) {
+    console.error("Error executing start command:", error.message);
+    process.exit(1);
+  }
+};
+
 const start = () => {
   try {
-    execSync("nodemon dist/server.js", { stdio: "inherit" });
+    execSync("node server.js", { stdio: "inherit" });
   } catch (error) {
     console.error("Error executing start command:", error.message);
     process.exit(1);
@@ -29,4 +38,4 @@ const runDevTs = () => {
   }
 };
 
-export { runDev, runDevTs, start };
+export { runDev, runDevTs, start, startTs };

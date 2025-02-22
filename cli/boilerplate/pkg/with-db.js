@@ -31,7 +31,7 @@ export const getPkgWithDB = (appName) => {
   "private": "true",
   "scripts": {
     "build": "tsc",
-    "start": "nexujs start",
+    "start": "nexujs start:ts",
     "dev": "nexujs dev:ts",
     "serve": "tsc && node dist/server.js",
     "update": "nexujs-cli update-deps"
@@ -86,7 +86,7 @@ export const getPkgWithDB = (appName) => {
   "private": "true",
   "scripts": {
     "build": "tsc",
-    "start": "nexujs start",
+    "start": "nexujs start:ts",
     "dev": "nexujs dev:ts",
     "serve": "tsc && node dist/server.js",
     "update": "nexujs-cli update-deps"

@@ -35,7 +35,32 @@ NODE_ENV="development"`;
 };
 
 export const dbConfig = () => {
-  const pg = `import { Pool, QueryResult, QueryResultRow } from 'pg';
+  const pg = `import { Pool } from 'pg';
+  
+const pool = new Pool({
+  user: process.env.PG_USER,
+  host: process.env.PG_HOST,
+  database: process.env.PG_DB,
+  password: process.env.PG_PASS,
+  port: 5432,
+});
+  
+      
+export const query = async (
+  action,
+  values
+) => {
+  const client = await pool.connect();
+  try {
+    return await client.query(action, values);
+  } catch (error) {
+    throw new Error(\`\${error.message}\`);
+  } finally {
+    client.release();
+  }
+};
+`;
+  const pgTs = `import { Pool, QueryResult, QueryResultRow } from 'pg';
   
 const pool = new Pool({
   user: process.env.PG_USER,
@@ -54,7 +79,7 @@ export const query = async (
   try {
     return await client.query(action, values);
   } catch (error) {
-    throw new Error("Database query failed");
+    throw new Error(\`\${(error as Error).message}\`);
   } finally {
     client.release();
   }
@@ -98,5 +123,5 @@ const connectDB = async () => {
   
 export default connectDB;`;
 
-  return { pg, mongo };
+  return { pg, mongo, pgTs };
 };

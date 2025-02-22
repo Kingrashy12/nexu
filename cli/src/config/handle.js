@@ -123,7 +123,7 @@ const createDBConfig = async (isTs, db, appName) => {
   if (isPostgres) {
     switch (isTs) {
       case "yes":
-        await createFile(`${path}/postgresClient.ts`, files.configFile.pg);
+        await createFile(`${path}/postgresClient.ts`, files.configFile.pgTs);
         break;
       case "no":
         await createFile(`${path}/postgresClient.js`, files.configFile.pg);

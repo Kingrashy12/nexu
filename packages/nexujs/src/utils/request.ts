@@ -1,5 +1,5 @@
 import { logger } from "../app/logger";
-import { RequestAction, RequestOptions, ThrowError } from "../types";
+import { RequestAction, ThrowError } from "../types";
 
 /**
  * Utility function that executes a request action.
@@ -59,52 +59,7 @@ export const throwError = ({
   const err = error?.message ? error.message : error;
   logger.error(err);
   return res.status(Number(status)).json({
-    message: message || "An error occurred",
+    message: message || "Internal server error",
     error: typeof error === "object" && error?.message ? error.message : error,
   });
 };
-
-/**
- * Utility that handles an API request with custom error handling.
- *
- * **Note:** The provided action is automatically wrapped in a `try-catch` block,
- * so you do not need to include error handling inside the action function.
- *
- * @param options - The request options containing the action and optional error handler.
- * @returns A function that processes the request.
- *
- * @example
- * ```ts
- * import { request } from "nexujs";
- *
- * export const getUser = request({
- *   action: async (req, res) => {
- *     const user = await User.findById(req.params.id);
- *     if (!user) {
- *       return res.status(404).json({ message: "User not found" });
- *     }
- *     res.status(200).json(user);
- *   },
- *   errorMessage: "Failed to retrieve user",
- * });
- * ```
- */
-export const request = (options: RequestOptions) =>
-  processRequest({
-    async action(req, res, next) {
-      try {
-        options.action(req, res, next);
-      } catch (error) {
-        if (options.errorHandler) {
-          return options.errorHandler(req, res, error as Error);
-        }
-
-        return throwError({
-          res,
-          error,
-          message: options.errorMessage,
-          status: "500",
-        });
-      }
-    },
-  });

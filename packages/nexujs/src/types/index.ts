@@ -208,29 +208,3 @@ export type EncryptedData = {
   iv: string;
   tag: string;
 };
-
-export type RequestOptions = {
-  /**
-   * Custom error message to be returned when an error occurs.
-   */
-  errorMessage?: string;
-
-  /**
-   * Custom error handler function to handle errors.
-   * @param req - The incoming request object.
-   * @param res - The outgoing response object.
-   * @param error - The error that occurred.
-   */
-  errorHandler?: (req: NexuRequest, res: NexuResponse, error: Error) => void;
-
-  /**
-   * The main action handler function to process the request.
-   * **Note:** This function is automatically wrapped in a `try-catch` block,
-   * so you do not need to handle errors manually.
-   *
-   * @param req - The incoming request object.
-   * @param res - The outgoing response object.
-   * @param next - The next middleware function.
-   */
-  action: NexuHandler;
-};
