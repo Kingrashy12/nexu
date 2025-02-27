@@ -44,10 +44,8 @@ class NexuRouter {
   }
 
   private decryptRequestBody(req: Request, res: NexuResponse) {
-    const isDev =
-      process.env.NODE_ENV === "development" &&
-      this.Config?.dev?.disableEncryption;
-    if (isDev) {
+    const encryptionIsDisabled = this.Config?.disableEncryption;
+    if (encryptionIsDisabled) {
       return req.body;
     } else {
       try {
@@ -70,9 +68,7 @@ class NexuRouter {
 
   private wrapHandler(handler: express.RequestHandler): express.RequestHandler {
     return async (req, res, next) => {
-      const isDev =
-        process.env.NODE_ENV === "development" &&
-        this.Config?.dev?.disableEncryption;
+      const encryptionIsDisabled = this.Config?.disableEncryption;
 
       const originalStatus = res.status.bind(res);
 
@@ -90,21 +86,13 @@ class NexuRouter {
       };
 
       try {
-        if (isDev) {
-          const disableEnHeader = req.header("nexu-mode");
-
-          if (!disableEnHeader) {
-            res.setHeader("nexu-mode", "dev");
-          }
-        }
-
         this.decryptRequestBody(req, res);
 
         const originalJson = res.json.bind(res);
 
         res.json = (data: any) => {
           try {
-            if (error || isDev) {
+            if (error || encryptionIsDisabled) {
               return originalJson(data);
             }
 

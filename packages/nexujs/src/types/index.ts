@@ -122,13 +122,14 @@ export interface Config {
 
   /**
    * Development-specific configuration options.
-   * - `disableEncryption`: Optional flag to disable encryption for development purposes.
-   *   Useful for local testing and debugging without the overhead of secure connections.
    */
-  dev?: {
-    /** Only use this on development, don't add the `NODE_ENV=development` to your production env. */
-    disableEncryption?: boolean;
-  };
+  dev?: {};
+
+  /**
+   * Allows opting out of encryption.
+   * `true` disables encryption, `false` (default) keeps it enabled.
+   */
+  disableEncryption?: boolean;
 }
 
 export type NexuMiddleware = (

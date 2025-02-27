@@ -21,6 +21,9 @@ const externalDeps = [
   "node-forge",
   "express-rate-limit",
   "@types/node-forge",
+  "url",
+  "http",
+  "https",
 ];
 
 export default [

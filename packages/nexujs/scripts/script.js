@@ -1,4 +1,5 @@
 import { execSync } from "child_process";
+import { clearTerminal } from "./global.js";
 
 const startTs = () => {
   try {
@@ -20,6 +21,7 @@ const start = () => {
 
 const runDev = () => {
   try {
+    clearTerminal();
     execSync("nodemon server.js", { stdio: "inherit" });
   } catch (error) {
     console.error("Error executing dev command:", error.message);
@@ -29,6 +31,7 @@ const runDev = () => {
 
 const runDevTs = () => {
   try {
+    clearTerminal();
     execSync('tsc-watch --onsuccess "node dist/server.js"', {
       stdio: "inherit",
     });
