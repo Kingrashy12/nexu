@@ -1,6 +1,10 @@
 import { writeFileSync, readFileSync, existsSync } from "fs";
 import path from "path";
 import { logger } from "../app/logger";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const LOG_FILE_PATH = path.join(__dirname, "server-log.json");
 
