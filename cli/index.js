@@ -11,7 +11,7 @@ const program = new Command();
 program
   .name("nexujs-cli")
   .description("CLI for scaffolding and managing NexuJs apps")
-  .version("0.1.33");
+  .version("0.1.34");
 
 program
   .command("update-deps")

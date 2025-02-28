@@ -38,21 +38,25 @@
 To create a new **Nexu** project, all you need to do is run:
 
 ```bash
-npx nexujs-cli create
+npx nexujs-cli init
 ```
 
 On initialization, you'll see the following prompts:
 
 ```bash
-What is your project name?
+◇ What is your project name?
 │  nexu-app
-Would you like to use Typescript?
+◇ Would you like to use Typescript?
 │  ● Yes (Recommended)
 │  ○ No
-Which database would you like to use?
+◇ Which database would you like to use?
 │  ● MongoDB
 │  ○ PostgreSQL
+│  ○ Neon
 │  ○ Others
+◆ Would you like to initialize a git repo
+│  ● Yes (Default)
+│  ○ No
 ```
 
 After the prompts, `nexujs-cli` will create a new Nexu project and install the required dependencies.

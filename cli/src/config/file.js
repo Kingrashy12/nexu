@@ -2,7 +2,7 @@ import fs from "fs";
 import { logger } from "../logger.js";
 import path from "path";
 
-export const folders = ["controller", "routes", "middleware", "model"];
+export const folders = ["controllers", "routes", "middleware", "model"];
 
 export const createRootPath = async (folderName) => {
   const resolvedPath = path.resolve(folderName);
