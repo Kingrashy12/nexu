@@ -1,16 +1,23 @@
-import { cancel, isCancel, log, select, text } from "@clack/prompts";
+import { cancel, isCancel, log, select, spinner, text } from "@clack/prompts";
 import { createPath, createRootPath, folders } from "../config/file.js";
 import chalk from "chalk";
 import { handleFiles } from "../config/handle.js";
 import { logger } from "../logger.js";
 import { selected } from "../config/select.js";
+import { fetchFiles } from "../config/fetch-files.js";
+import { generateRsaKey } from "./generate-key.js";
+import "./global.js";
+
+const Spinner = spinner();
 
 class CreateApp {
   projectName = "";
   selectedDb = "";
   selectedLang = "";
   initGit = true;
-  useJest = false;
+  bits = 2048;
+  public_key;
+  private_key;
 
   async #askProjectName() {
     const project_name = await text({
@@ -27,7 +34,7 @@ class CreateApp {
       options: [
         { value: "mongodb", label: "MongoDB" },
         { value: "postgresql", label: "PostgreSQL" },
-        { value: "neon", label: "Neon", hint: "Soon" },
+        { value: "neon", label: "Neon" },
         { value: "others", label: "Others" },
       ],
     });
@@ -56,20 +63,44 @@ class CreateApp {
     this.initGit = git;
   }
 
-  async #askJest() {
-    const jest = await select({
-      message: "Do you want to use Jest for testing?",
+  async #askBits() {
+    const bits = await select({
+      message: "Select RSA key length:",
       options: [
-        { value: true, label: "Yes", hint: "Soon" },
-        { value: false, label: "No" },
+        { value: 2048, label: "2048 (Recommended)" },
+        { value: 3072, label: "3072 (High Security)" },
+        { value: 4096, label: "4096 (Very High Security, may be slow)" },
       ],
     });
-    this.useJest = jest;
+    this.bits = bits;
   }
+
+  async #generateKeys() {
+    const { publicKey, privateKey } = await generateRsaKey(this.bits);
+    this.public_key = publicKey;
+    this.private_key = privateKey;
+  }
+
+  createDir = async (sub, db) => {
+    try {
+      if (selected.db.includes(db)) {
+        folders.push("config");
+      }
+      for (const dir of folders) {
+        createPath(`${sub}/${dir}`);
+      }
+      logger.log("\nfolders:\n");
+      for (const dir of folders) {
+        log.message(chalk.blueBright(`/${dir}`));
+      }
+    } catch (error) {
+      logger.error(error);
+    }
+  };
 
   async #handleDir() {
     await createRootPath(this.projectName);
-    await createDir(this.projectName, this.selectedDb);
+    await this.createDir(this.projectName, this.selectedDb);
   }
 
   #success(name) {
@@ -77,76 +108,93 @@ class CreateApp {
 
 ${chalk.greenBright(name && `\cd ${this.projectName} && `)}npm run dev
     `);
+
+    process.exit(0);
   }
 
   async init() {
-    await this.#askProjectName();
-    if (isCancel(this.projectName)) {
-      cancel("Process closed: Project name input was cancelled.");
-      process.exit(0);
-    }
+    try {
+      log.info(chalk.green("🚀 Starting project creation..."));
 
-    await this.#askLanguage();
-    if (isCancel(this.selectedLang)) {
-      cancel("Process closed: Language selection was cancelled.");
-      process.exit(0);
-    }
+      await this.#askProjectName();
+      if (isCancel(this.projectName)) {
+        cancel(
+          chalk.red("❌ Process closed: Project name input was cancelled.")
+        );
+        process.exit(0);
+      }
 
-    await this.#askDBOptions();
-    if (isCancel(this.selectedDb)) {
-      cancel("Process closed: Database selection was cancelled.");
-      process.exit(0);
-    }
+      await this.#askLanguage();
+      if (isCancel(this.selectedLang)) {
+        cancel(
+          chalk.red("❌ Process closed: Language selection was cancelled.")
+        );
+        process.exit(0);
+      }
 
-    await this.#askGitInit();
-    if (isCancel(this.selectedDb)) {
-      cancel("Process closed: Git init was cancelled.");
-      process.exit(0);
-    }
+      await this.#askDBOptions();
+      if (isCancel(this.selectedDb)) {
+        cancel(
+          chalk.red("❌ Process closed: Database selection was cancelled.")
+        );
+        process.exit(0);
+      }
 
-    await this.#askJest();
-    if (isCancel(this.selectedDb)) {
-      cancel("Process jest: Git init was cancelled.");
-      process.exit(0);
-    }
+      await this.#askGitInit();
+      if (isCancel(this.initGit)) {
+        cancel(chalk.red("❌ Process closed: Git init was cancelled."));
+        process.exit(0);
+      }
 
-    await this.#handleDir();
+      await this.#askBits();
+      if (isCancel(this.bits)) {
+        cancel(
+          chalk.red(
+            "❌ Process closed: RSA key length selection was cancelled."
+          )
+        );
+        process.exit(0);
+      }
 
-    await handleFiles(
-      this.selectedLang,
-      this.selectedDb,
-      this.projectName,
-      this.initGit
-    );
+      await this.#generateKeys();
+      await this.#downloadBoilerPlates();
+      await this.#handleDir();
 
-    logger.success(
-      chalk.green(`\nProject "${this.projectName}" created successfully 🎉`)
-    );
-    const name = this.projectName !== "./" ? this.projectName : "";
-    this.#success(name);
+      Spinner.start(
+        `📂 Creating project: ${chalk.blueBright(this.projectName)}...`
+      );
 
-    if (!this.projectName || !this.selectedLang || !this.selectedDb) {
-      log.warning("Missing required inputs. Please try again.");
+      await handleFiles(
+        this.selectedLang,
+        this.selectedDb,
+        this.projectName,
+        this.initGit,
+        this.public_key,
+        this.private_key
+      );
+
+      Spinner.stop(
+        chalk.green(`✅ Project "${this.projectName}" created successfully 🎉`)
+      );
+
+      const name = this.projectName !== "./" ? this.projectName : "";
+      this.#success(name);
+
+      if (!this.projectName || !this.selectedLang || !this.selectedDb) {
+        log.warning("Missing required inputs. Please try again.");
+        process.exit(1);
+      }
+    } catch (error) {
+      Spinner.stop(chalk.red("❌ Something went wrong."));
+      log.error(chalk.red(`▲ Error: ${error}`));
       process.exit(1);
     }
+  }
+
+  async #downloadBoilerPlates() {
+    const boilerplates = await fetchFiles();
+    globalThis.boilerplates = boilerplates;
   }
 }
 
 export const createApp = new CreateApp();
-
-const createDir = async (sub, db) => {
-  try {
-    if (selected.db.includes(db)) {
-      folders.push("config");
-    }
-    for (const dir of folders) {
-      createPath(`${sub}/${dir}`);
-    }
-    logger.log("\nfolders:\n");
-    for (const dir of folders) {
-      log.message(chalk.blueBright(`/${dir}`));
-    }
-  } catch (error) {
-    logger.error(error);
-  }
-};

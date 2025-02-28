@@ -9,34 +9,30 @@ import { logger } from "../logger.js";
 const installPkg = async (appName) => {
   logger.message("\nInstalling dependencies using npm install....\n");
 
+  const dir = path.resolve(appName);
+
   try {
     const installCommand =
-      appName !== "/"
-        ? `cd ${path.resolve(appName)} && npm install` // if appName is a directory, install in that directory
-        : "npm install"; // otherwise, install in the current directory
+      appName !== "/" ? `cd ${dir} && npm install` : "npm install";
 
-    // Run the installation command
     execSync(installCommand, { stdio: "inherit" });
     logger.success("Dependencies installed successfully.");
+    console.clear();
   } catch (error) {
-    // Handle errors if npm install fails
     logger.error(`Error during npm install: ${error.message}`);
     process.exit(1);
   }
 
-  // Log and start updating the dependencies using CLI command
   logger.message("\nUpdating dependencies....\n");
 
   try {
     const updateCommand =
       appName !== "/"
-        ? `cd ${path.resolve(appName)} && npx nexujs-cli update-deps` // Run the update-deps command in the app directory
-        : "npx nexujs-cli update-deps"; // Run the update-deps command in the current directory
+        ? `cd ${dir} && npx nexujs-cli update-deps`
+        : "npx nexujs-cli update-deps";
 
-    // Run the update-deps CLI command
     execSync(updateCommand, { stdio: "inherit" });
   } catch (error) {
-    // Handle errors if the update-deps CLI command fails
     logger.error(`Error during update-deps: ${error.message}`);
     process.exit(1);
   }

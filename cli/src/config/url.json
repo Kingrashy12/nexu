@@ -1,0 +1,34 @@
+{
+  "common": {
+    "gitignore": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/common/.gitignore",
+    "readme": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/common/README.md",
+    "app-config": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/common/nexu.config.ts",
+    "server": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/common/server.ts"
+  },
+  "typescripts": {
+    "package": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/typescript/package.json",
+    "package-pg": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/typescript/package-pg.json",
+    "package-neon": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/typescript/package-neon.json",
+    "package-mongo": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/typescript/package-mongo.json",
+    "tsconfig": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/typescript/tsconfig.json",
+    "nodemon": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/typescript/nodemon.json",
+    "hello-route": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/typescript/routes/hello.ts",
+    "config": {
+      "pg-config": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/typescript/config/postgresClient.ts",
+      "neon-config": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/typescript/config/neon.ts",
+      "mongo-client": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/typescript/config/mongoClient.ts"
+    }
+  },
+  "javascripts": {
+    "package": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/js/package.json",
+    "package-pg": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/js/package-pg.json",
+    "package-neon": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/js/package-neon.json",
+    "package-mongo": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/js/package-mongo.json",
+    "hello-route": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/js/routes/hello.js",
+    "config": {
+      "pg-config": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/js/config/postgresClient.js",
+      "neon-config": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/js/config/neon.js",
+      "mongo-client": "https://raw.githubusercontent.com/Kingrashy12/nexu-boilerplate/main/js/config/mongoClient.js"
+    }
+  }
+}

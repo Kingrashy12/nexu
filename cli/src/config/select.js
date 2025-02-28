@@ -1,4 +1,4 @@
 export const selected = {
   lang: ["yes", "no"],
-  db: ["postgresql", "mongodb"],
+  db: ["postgresql", "mongodb", "neon"],
 };
