@@ -82,7 +82,7 @@ export const generateId = (length: number): string => {
  */
 export const generateUUID = (length: number): string => {
   const char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  return Array.from({ length }, () => {
-    char.charAt(Math.floor(Math.random() * char.length));
-  }).join("");
+  return Array.from({ length }, () =>
+    char.charAt(Math.floor(Math.random() * char.length))
+  ).join("");
 };
