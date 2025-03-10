@@ -24,6 +24,7 @@ const externalDeps = [
   "url",
   "http",
   "https",
+  "crypto",
 ];
 
 export default [

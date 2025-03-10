@@ -1,4 +1,5 @@
 import { DataGroup } from "../types/utils";
+import { randomUUID } from "crypto";
 
 /**
  * Converts a string to a URL-friendly slug by removing spaces and special characters.
@@ -72,17 +73,19 @@ export const generateId = (length: number): string => {
 };
 
 /**
- * Generates a random alphanumeric UUID of the specified length.
+ * Generates a random alphanumeric ID of the specified length.
  *
- * @param {number} length - The length of the generated UUID.
+ * @param {number} length - The length of the generated ID.
  * @returns {string} A randomly generated alphanumeric string.
  *
  * @example
- * console.log(generateUUID(8)); // e.g., "A9XbT7P3"
+ * console.log(generateRandomID(8)); // e.g., "A9XbT7P3"
  */
-export const generateUUID = (length: number): string => {
+export const generateRandomID = (length: number): string => {
   const char = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   return Array.from({ length }, () =>
     char.charAt(Math.floor(Math.random() * char.length))
   ).join("");
 };
+
+export const generateUUID = () => randomUUID();
