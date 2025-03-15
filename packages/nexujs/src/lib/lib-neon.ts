@@ -1,17 +1,17 @@
-import { PgQuery, RequestLimitPg } from "../types/lib";
-import useQueryLimit from "./useQueryLimit";
+import { NeonQuery, RequestLimitPg } from "../types/lib";
+import useNeonQueryLimit from "./useNeonQueryLimit";
 
 /**
- * Class representing interactions with a PostgreSQL database using queries.
+ * Class representing interactions with a Neon database using queries.
  *
  * @example
  *
- * const postgresClient = new NexuPostgres(query) // The query should be imported from 'config/postgres-client'
+ * const neonClient = new NexuNeon(query) // The query should be imported from 'config/neon-client'
  */
-class NexuPostgres {
-  private query: PgQuery;
+class NexuNeon {
+  private query: NeonQuery;
 
-  constructor(query: PgQuery) {
+  constructor(query: NeonQuery) {
     this.query = query;
   }
 
@@ -42,7 +42,7 @@ class NexuPostgres {
     columns,
     columns_list,
   }: RequestLimitPg) {
-    return useQueryLimit({
+    return useNeonQueryLimit({
       req,
       whereClause,
       table,
@@ -58,4 +58,4 @@ class NexuPostgres {
   }
 }
 
-export default NexuPostgres;
+export default NexuNeon;

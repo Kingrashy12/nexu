@@ -31,12 +31,31 @@ export type PgQuery = (
   values?: unknown[]
 ) => Promise<QueryResult<QueryResultRow> | undefined>;
 
+export type NeonQuery = (
+  action: string,
+  values?: unknown[]
+) => Promise<Record<string, any>[]>;
+
 export interface RequestWithLimit {
   page?: number;
   limit?: number;
   req: NexuRequest;
   table: string;
   query: PgQuery;
+  whereClause?: string;
+  values?: unknown[];
+  sortBy?: string | any;
+  order?: string | any;
+  columns?: string[];
+  columns_list?: string;
+}
+
+export interface NeonRequestWithLimit {
+  page?: number;
+  limit?: number;
+  req: NexuRequest;
+  table: string;
+  query: NeonQuery;
   whereClause?: string;
   values?: unknown[];
   sortBy?: string | any;
